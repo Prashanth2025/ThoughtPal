@@ -36,7 +36,7 @@ const Profile = () => {
 
     try {
       const res = await axios.patch(
-        "http://localhost:2026/api/v1/user/name",
+        "https://thoughtpal-server.onrender.com/api/v1/user/name",
         { name: newName },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -65,7 +65,7 @@ const Profile = () => {
 
     try {
       const res = await axios.patch(
-        "http://localhost:2026/api/v1/user/password",
+        "https://thoughtpal-server.onrender.com/api/v1/user/password",
         { oldPassword, newPassword, confirmPassword },
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -15,7 +15,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       const res = await fetch(
-        "http://localhost:2026/api/v1/user/forgot-password",
+        "https://thoughtpal-client.onrender.com/api/v1/user/login/api/v1/user/forgot-password",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -39,7 +39,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       const res = await fetch(
-        "http://localhost:2026/api/v1/user/reset-password",
+        "https://thoughtpal-server.onrender.com/api/v1/user/reset-password",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

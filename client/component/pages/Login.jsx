@@ -4,7 +4,6 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import profile from "../../src/assets/profile.jpg";
 
-
 let Login = () => {
   let [loginDetails, setLoginDetails] = useState({ email: "", password: "" });
   let [showPassword, setShowPassword] = useState(false);
@@ -22,7 +21,7 @@ let Login = () => {
     }
     try {
       let data = await axios.post(
-        "http://localhost:2026/api/v1/user/login",
+        "https://thoughtpal-server.onrender.com/api/v1/user/login",
         loginDetails
       );
 

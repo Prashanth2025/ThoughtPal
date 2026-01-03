@@ -26,7 +26,7 @@ let Signup = () => {
 
     try {
       let data = await axios.post(
-        "http://localhost:2026/api/v1/user/signup",
+        "https://thoughtpal-server.onrender.com/api/v1/user/signup",
         signupDetails
       );
       toast.success(data.data.msg);
