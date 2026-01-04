@@ -2,10 +2,13 @@ let mongoose = require("mongoose");
 
 let connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/merndb");
-    console.log("db connected");
+    await mongoose.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("MongoDB connected");
   } catch (error) {
-    console.log("not connected");
+    console.error("MongoDB connection failed:", error.message);
   }
 };
 
