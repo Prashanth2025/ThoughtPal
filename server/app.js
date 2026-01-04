@@ -10,6 +10,7 @@ app.use(
   cors({
     origin: "https://thoughtpal-client.onrender.com",
     methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
 
