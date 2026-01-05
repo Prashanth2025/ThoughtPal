@@ -5,7 +5,7 @@ const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 require("dotenv").config();
 
-// Signup
+// -------------------- Signup --------------------
 const handleSignup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -29,7 +29,7 @@ const handleSignup = async (req, res) => {
   }
 };
 
-// Login
+// -------------------- Login --------------------
 const handlelogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -66,7 +66,7 @@ const handlelogin = async (req, res) => {
   }
 };
 
-// Get user info
+// -------------------- Get user info --------------------
 const getUserInfo = async (req, res) => {
   const { _id } = req.payload;
   try {
@@ -77,7 +77,7 @@ const getUserInfo = async (req, res) => {
   }
 };
 
-// Update name
+// -------------------- Update name --------------------
 const handleNameUpdate = async (req, res) => {
   const { _id } = req.payload;
   try {
@@ -93,7 +93,7 @@ const handleNameUpdate = async (req, res) => {
   }
 };
 
-// Update password (logged-in user)
+// -------------------- Update password --------------------
 const updateUserPassword = async (req, res) => {
   const { _id } = req.payload;
   const { oldPassword, newPassword, confirmPassword } = req.body;
@@ -123,18 +123,18 @@ const updateUserPassword = async (req, res) => {
   }
 };
 
-// Nodemailer transporter
+// -------------------- Nodemailer transporter --------------------
 let transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  host: process.env.SMTP_HOST || "smtp.gmail.com",
+  port: process.env.SMTP_PORT || 465,
+  secure: true, // true for 465
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    pass: process.env.EMAIL_PASS, // must be App Password
   },
 });
 
-// Forgot Password → generate OTP
+// -------------------- Forgot Password (generate OTP) --------------------
 const forgotPass = async (req, res) => {
   try {
     const { email } = req.body;
@@ -150,13 +150,12 @@ const forgotPass = async (req, res) => {
     user.otpExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes
     await user.save();
 
-    // ✅ SEND RESPONSE IMMEDIATELY
     res.status(200).json({ msg: "OTP sent to email" });
 
-    // ✅ SEND EMAIL IN BACKGROUND (NO await)
+    // Send email in background
     transporter
       .sendMail({
-        from: process.env.EMAIL_USER,
+        from: `"ThoughtPal" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: "Your OTP Code",
         text: `Your OTP is ${otp}. Valid for 5 minutes.`,
@@ -169,7 +168,7 @@ const forgotPass = async (req, res) => {
   }
 };
 
-// Reset Password → validate OTP
+// -------------------- Reset Password (validate OTP) --------------------
 const resetPass = async (req, res) => {
   try {
     const { email, otp, newPassword } = req.body;
