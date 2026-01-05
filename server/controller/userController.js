@@ -144,9 +144,6 @@ const forgotPass = async (req, res) => {
     user.otpExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes
     await user.save();
 
-    console.log("DEBUG: Generated OTP:", otp);
-    console.log("DEBUG: Expiry set to:", user.otpExpiry);
-
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
@@ -167,15 +164,6 @@ const resetPass = async (req, res) => {
     const { email, otp, newPassword } = req.body;
     const user = await User.findOne({ email });
 
-    // Debugging logs
-    console.log("DEBUG: Email received:", email);
-    console.log("DEBUG: OTP received:", otp);
-    if (user) {
-      console.log("DEBUG: Stored OTP:", user.otp);
-      console.log("DEBUG: Stored Expiry:", user.otpExpiry);
-      console.log("DEBUG: Current Time:", Date.now());
-    }
-
     if (
       !user ||
       String(user.otp) !== String(otp) ||
@@ -189,8 +177,6 @@ const resetPass = async (req, res) => {
     user.otp = null;
     user.otpExpiry = null;
     await user.save();
-
-    console.log("DEBUG: Password reset successful for:", email);
 
     res.json({ msg: "Password reset successful" });
   } catch (error) {
