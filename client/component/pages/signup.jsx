@@ -4,35 +4,45 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import profile from "../../src/assets/profile.jpg";
 
-let Signup = () => {
-  let [signupDetails, setSignupDetails] = useState({
+const Signup = () => {
+  const [signupDetails, setSignupDetails] = useState({
     name: "",
     email: "",
     password: "",
   });
-  let [showPassword, setShowPassword] = useState(false);
-  let navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  let handleSignChange = (e) => {
-    let { value, name } = e.target;
+  const handleSignChange = (e) => {
+    const { value, name } = e.target;
     setSignupDetails({ ...signupDetails, [name]: value });
   };
 
-  let handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!signupDetails.name) return toast.error("Name is required!");
     if (!signupDetails.email) return toast.error("Email is required!");
+    if (!/\S+@\S+\.\S+/.test(signupDetails.email)) {
+      return toast.error("Please enter a valid email address");
+    }
     if (!signupDetails.password) return toast.error("Password is required!");
+    if (signupDetails.password.length < 8) {
+      return toast.error("Password must be at least 8 characters long");
+    }
 
+    setLoading(true);
     try {
-      let data = await axios.post(
+      const { data } = await axios.post(
         "https://thoughtpal-server.onrender.com/api/v1/user/signup",
         signupDetails
       );
-      toast.success(data.data.msg);
+      toast.success(data.msg);
       navigate("/login");
     } catch (error) {
       toast.error(error?.response?.data?.msg || "Signup failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -105,6 +115,7 @@ let Signup = () => {
               className="input-group-text"
               style={{ cursor: "pointer" }}
               onClick={() => setShowPassword(!showPassword)}
+              aria-label="Toggle password visibility"
             >
               <i
                 className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
@@ -116,8 +127,9 @@ let Signup = () => {
           <button
             type="submit"
             className="btn btn-primary btn-lg w-100 fw-bold"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? "Signing up..." : "Sign Up"}
           </button>
 
           {/* Redirect */}

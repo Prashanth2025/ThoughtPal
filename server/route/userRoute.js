@@ -1,5 +1,4 @@
-let express = require("express");
-
+const express = require("express");
 const {
   handleSignup,
   handlelogin,
@@ -9,17 +8,19 @@ const {
   forgotPass,
   resetPass,
 } = require("../controller/userController");
-
 const verifyToken = require("../middleware/verifyToken");
 
-let UserRouter = express.Router();
+const UserRouter = express.Router();
 
+// Public routes
 UserRouter.post("/signup", handleSignup);
 UserRouter.post("/login", handlelogin);
-UserRouter.get("/", verifyToken, getUserInfo);
-UserRouter.patch("/name", verifyToken, handleNameUpdate);
-UserRouter.patch("/password", verifyToken, updateUserPassword);
 UserRouter.post("/forgot-password", forgotPass);
 UserRouter.post("/reset-password", resetPass);
+
+// Protected routes
+UserRouter.get("/me", verifyToken, getUserInfo);
+UserRouter.patch("/name", verifyToken, handleNameUpdate);
+UserRouter.patch("/password", verifyToken, updateUserPassword);
 
 module.exports = UserRouter;

@@ -8,14 +8,19 @@ const ForgotPassword = () => {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Step 1: Request OTP
   const handleForgot = async (e) => {
     e.preventDefault();
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      return toast.error("Please enter a valid email address");
+    }
+    setLoading(true);
     try {
       const res = await fetch(
-        "https://thoughtpal-client.onrender.com/api/v1/user/forgot-password",
+        "https://thoughtpal-server.onrender.com/api/v1/user/forgot-password",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -31,12 +36,18 @@ const ForgotPassword = () => {
       }
     } catch (err) {
       toast.error("Error sending OTP: " + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Step 2: Reset password with OTP
   const handleReset = async (e) => {
     e.preventDefault();
+    if (!otp || !newPassword) {
+      return toast.error("All fields are required");
+    }
+    setLoading(true);
     try {
       const res = await fetch(
         "https://thoughtpal-server.onrender.com/api/v1/user/reset-password",
@@ -56,6 +67,8 @@ const ForgotPassword = () => {
       }
     } catch (err) {
       toast.error("Error resetting password: " + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,8 +95,12 @@ const ForgotPassword = () => {
                   required
                 />
               </div>
-              <button type="submit" className="btn btn-primary w-100">
-                Send OTP
+              <button
+                type="submit"
+                className="btn btn-primary w-100"
+                disabled={loading}
+              >
+                {loading ? "Sending..." : "Send OTP"}
               </button>
             </form>
           </>
@@ -130,8 +147,12 @@ const ForgotPassword = () => {
                   </button>
                 </div>
               </div>
-              <button type="submit" className="btn btn-success w-100">
-                Reset Password
+              <button
+                type="submit"
+                className="btn btn-success w-100"
+                disabled={loading}
+              >
+                {loading ? "Resetting..." : "Reset Password"}
               </button>
             </form>
           </>

@@ -13,22 +13,27 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      match: [/^\S+@\S+\.\S+$/, "Please enter a valid email"],
     },
     password: {
       type: String,
       required: true,
+      minlength: 8,
     },
     otp: {
       type: String,
       default: null,
     },
     otpExpiry: {
-      type: Number,
+      type: Date,
       default: null,
     },
   },
   { timestamps: true }
 );
+
+// Index for faster lookups
+userSchema.index({ email: 1 });
 
 const User = mongoose.model("User", userSchema);
 
