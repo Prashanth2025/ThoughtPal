@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Login from "../component/pages/Login";
 import Dashboard from "../component/pages/Dashboard";
 import { Toaster } from "react-hot-toast";
-import Signup from "../component/pages/Signup";
+import Signup from "../component/pages/signup";
 import Navbar from "../component/Constants/Navbar";
 import CreateNotes from "../component/pages/Notes";
 import Profile from "../component/pages/Profile";
