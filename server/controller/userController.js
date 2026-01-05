@@ -125,10 +125,12 @@ const updateUserPassword = async (req, res) => {
 
 // Nodemailer transporter
 let transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, // must be App Password
+    pass: process.env.EMAIL_PASS,
   },
 });
 
