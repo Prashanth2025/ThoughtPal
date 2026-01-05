@@ -136,22 +136,31 @@ let transporter = nodemailer.createTransport({
 const forgotPass = async (req, res) => {
   try {
     const { email } = req.body;
+
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: "User not found" });
+    if (!user) {
+      return res.status(400).json({ msg: "User not found" });
+    }
 
     const otp = crypto.randomInt(100000, 999999).toString();
+
     user.otp = otp;
     user.otpExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes
     await user.save();
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Your OTP Code",
-      text: `Your OTP is ${otp}. It is valid for 5 minutes.`,
-    });
+    // ✅ SEND RESPONSE IMMEDIATELY
+    res.status(200).json({ msg: "OTP sent to email" });
 
-    res.json({ msg: "OTP sent to email" });
+    // ✅ SEND EMAIL IN BACKGROUND (NO await)
+    transporter
+      .sendMail({
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Your OTP Code",
+        text: `Your OTP is ${otp}. Valid for 5 minutes.`,
+      })
+      .then(() => console.log("OTP email sent"))
+      .catch((err) => console.error("Email error:", err));
   } catch (error) {
     console.error("ERROR in forgotPass:", error);
     res.status(500).json({ msg: "Server error" });
