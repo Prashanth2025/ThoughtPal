@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import Login from "../component/pages/Login";
 import Dashboard from "../component/pages/Dashboard";
 import { Toaster } from "react-hot-toast";
-import Signup from "../component/pages/signup";
+import Signup from "../component/pages/Signup";
 import Navbar from "../component/Constants/Navbar";
 import CreateNotes from "../component/pages/Notes";
 import Profile from "../component/pages/Profile";
-import LandingPage from "../component/pages/LandingPage";
-import ForgotPassword from "../component/pages/ForgotPassword";
+import LandingPage from "../component/pages/Landingpage";
+import ForgotPassword from "../component/pages/PassUpdate";
 
 const App = () => {
   const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
