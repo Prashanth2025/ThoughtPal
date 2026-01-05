@@ -1,14 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-const Navbar = () => {
-  const navigate = useNavigate();
-  const isAuth = !!localStorage.getItem("token");
+let Navbar = () => {
+  let navigate = useNavigate();
+  let isAuth = localStorage.getItem("token");
 
-  const handleLogout = () => {
+  let handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
-    toast.success("You have been logged out");
+    toast.error("You have been logged out");
   };
 
   if (!isAuth) return null;
@@ -16,7 +16,7 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-dark bg-dark px-3">
       <Link className="navbar-brand" to="/dashboard">
-        ThoughtPal
+        MyApp
       </Link>
       <ul className="navbar-nav flex-row ms-auto">
         <li className="nav-item me-3">
@@ -35,11 +35,7 @@ const Navbar = () => {
           </Link>
         </li>
         <li className="nav-item">
-          <button
-            className="btn btn-outline-light"
-            onClick={handleLogout}
-            aria-label="Logout"
-          >
+          <button className="btn btn-outline-light" onClick={handleLogout}>
             Logout
           </button>
         </li>

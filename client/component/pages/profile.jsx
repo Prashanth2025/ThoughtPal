@@ -4,14 +4,13 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUsers] = useState(null);
   const [newName, setNewName] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNameField, setShowNameField] = useState(false);
   const [showPasswordField, setShowPasswordField] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -19,7 +18,7 @@ const Profile = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
       try {
-        setUser(JSON.parse(storedUser));
+        setUsers(JSON.parse(storedUser));
       } catch (err) {
         console.error("Failed to parse user:", err);
       }
@@ -28,13 +27,13 @@ const Profile = () => {
 
   const getToken = () => localStorage.getItem("token");
 
+  // Update name
   const handleNameUpdate = async (e) => {
     e.preventDefault();
     if (!newName.trim()) return toast.error("Name field is empty");
     const token = getToken();
     if (!token) return toast.error("You must be logged in");
 
-    setLoading(true);
     try {
       const res = await axios.patch(
         "https://thoughtpal-server.onrender.com/api/v1/user/name",
@@ -44,16 +43,15 @@ const Profile = () => {
       toast.success(res.data.msg);
       const updatedUser = { ...user, name: newName };
       localStorage.setItem("user", JSON.stringify(updatedUser));
-      setUser(updatedUser);
+      setUsers(updatedUser);
       setNewName("");
       setShowNameField(false);
     } catch (err) {
       toast.error(err.response?.data?.msg || "Error updating name");
-    } finally {
-      setLoading(false);
     }
   };
 
+  // Update password
   const handlePasswordUpdate = async (e) => {
     e.preventDefault();
     if (!oldPassword || !newPassword || !confirmPassword) {
@@ -62,13 +60,9 @@ const Profile = () => {
     if (newPassword !== confirmPassword) {
       return toast.error("New passwords do not match");
     }
-    if (newPassword.length < 8) {
-      return toast.error("Password must be at least 8 characters long");
-    }
     const token = getToken();
     if (!token) return toast.error("You must be logged in");
 
-    setLoading(true);
     try {
       const res = await axios.patch(
         "https://thoughtpal-server.onrender.com/api/v1/user/password",
@@ -83,11 +77,10 @@ const Profile = () => {
       handleLogout(); // auto logout
     } catch (err) {
       toast.error(err.response?.data?.msg || "Error updating password");
-    } finally {
-      setLoading(false);
     }
   };
 
+  // Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -103,11 +96,12 @@ const Profile = () => {
           <>
             <div className="mb-3">
               <strong>Name:</strong>
-              <p className="border border-2 rounded p-2">{user.name}</p>
+              <p className="border border-2 border rounded p-2">{user.name}</p>
               <strong>Email:</strong>
-              <p className="border border-2 rounded p-2">{user.email}</p>
+              <p className="border border-2 border rounded p-2">{user.email}</p>
             </div>
 
+            {/* Update Name */}
             {showNameField ? (
               <form onSubmit={handleNameUpdate} className="mb-3">
                 <input
@@ -117,11 +111,7 @@ const Profile = () => {
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                 />
-                <button
-                  type="submit"
-                  className="btn btn-primary w-100 mb-2"
-                  disabled={loading}
-                >
+                <button type="submit" className="btn btn-primary w-100 mb-2">
                   Save
                 </button>
                 <button
@@ -144,6 +134,7 @@ const Profile = () => {
               </button>
             )}
 
+            {/* Update Password */}
             {showPasswordField ? (
               <form onSubmit={handlePasswordUpdate} className="mb-3">
                 <input
@@ -167,11 +158,7 @@ const Profile = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
-                <button
-                  type="submit"
-                  className="btn btn-warning w-100 mb-2"
-                  disabled={loading}
-                >
+                <button type="submit" className="btn btn-warning w-100 mb-2">
                   Save
                 </button>
                 <button

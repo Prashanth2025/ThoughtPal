@@ -1,17 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
-const LandingPage = () => {
-  const navigate = useNavigate();
-  const isAuth = !!localStorage.getItem("token");
+let LandingPage = () => {
+  let navigate = useNavigate();
+  let isAuth = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (isAuth) {
-      navigate("/dashboard");
-    }
-  }, [isAuth, navigate]);
-
-  if (isAuth) return null;
+  if (isAuth) {
+    navigate("/create-notes");
+    return null;
+  }
 
   return (
     <div className="landing-container">

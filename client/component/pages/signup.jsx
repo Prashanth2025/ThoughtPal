@@ -48,10 +48,7 @@ const Signup = () => {
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light">
-      <div
-        className="card shadow rounded-3 p-4"
-        style={{ maxWidth: "400px", width: "100%" }}
-      >
+      <div className="card shadow rounded-3 p-4" style={{ maxWidth: "400px", width: "100%" }}>
         {/* Profile Avatar */}
         <div className="text-center mb-4">
           <img
@@ -63,9 +60,7 @@ const Signup = () => {
         </div>
 
         {/* Title */}
-        <h3 className="text-center mb-4 fw-bold text-primary">
-          Create Account
-        </h3>
+        <h3 className="text-center mb-4 fw-bold text-primary">Create Account</h3>
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
@@ -117,9 +112,7 @@ const Signup = () => {
               onClick={() => setShowPassword(!showPassword)}
               aria-label="Toggle password visibility"
             >
-              <i
-                className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
-              ></i>
+              <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
             </span>
           </div>
 

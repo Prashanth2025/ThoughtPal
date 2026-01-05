@@ -1,42 +1,24 @@
-const express = require("express");
+let express = require("express");
 const connectDB = require("./db/data");
-const cors = require("cors");
-const userRoute = require("./route/userRoute");
+let cors = require("cors");
+let userRoute = require("./route/userRoute");
+let PORT = process.env.PORT || 2026;
 require("dotenv").config();
 
-const PORT = process.env.PORT || 2026;
-const app = express();
-
-// Middleware
+let app = express();
 app.use(
   cors({
     origin: "https://thoughtpal-client.onrender.com",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
-app.use(express.json());
 
-// Routes
+app.use(express.json());
+connectDB();
+
 app.use("/api/v1/user", userRoute);
 
-// Error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ msg: "Something went wrong" });
+app.listen(PORT, () => {
+  console.log("server running at http://localhost:2026");
 });
-
-// Start server only after DB connects
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => {
-      console.log(`Server running at http://localhost:${PORT}`);
-    });
-  } catch (error) {
-    console.error("Failed to start server:", error);
-    process.exit(1);
-  }
-};
-
-startServer();

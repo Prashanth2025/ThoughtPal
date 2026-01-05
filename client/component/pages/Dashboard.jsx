@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -16,14 +15,6 @@ const Dashboard = () => {
     }
   }, []);
 
-  // Dynamic greeting based on time
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 18) return "Good afternoon";
-    return "Good evening";
-  };
-
   return (
     <div className="dashboard-container">
       <div className="dashboard-card shadow">
@@ -31,17 +22,12 @@ const Dashboard = () => {
         {user ? (
           <div className="dashboard-details">
             <p>
-              {getGreeting()}, <strong>{user?.name}</strong> 👋
+              Welcome, <strong>{user.name}</strong> 👋
             </p>
-            <p>Hope your day goes well!</p>
+            <p>Hope Your Day Go Well</p>
           </div>
         ) : (
-          <div className="no-user">
-            <p>No user details found</p>
-            <Link to="/login" className="btn btn-primary mt-3">
-              Go to Login
-            </Link>
-          </div>
+          <p className="no-user">No user details found</p>
         )}
       </div>
     </div>
