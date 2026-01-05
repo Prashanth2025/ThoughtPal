@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import profile from "../../src/assets/profile.jpg";
@@ -7,7 +7,7 @@ import profile from "../../src/assets/profile.jpg";
 let Login = () => {
   let [loginDetails, setLoginDetails] = useState({ email: "", password: "" });
   let [showPassword, setShowPassword] = useState(false);
-  let [redirect, setReDirect] = useState(false);
+  const navigate = useNavigate(); // ✅ useNavigate hook
 
   let handleChange = (e) => {
     let { value, name } = e.target;
@@ -17,28 +17,26 @@ let Login = () => {
   let handleSubmit = async (e) => {
     e.preventDefault();
     if (!loginDetails.email) {
-      return toast.error("email feild is empty");
+      return toast.error("Email field is empty");
     }
     try {
-      let data = await axios.post(
+      let { data } = await axios.post(
         "https://thoughtpal-server.onrender.com/api/v1/user/login",
         loginDetails
       );
 
-      localStorage.setItem("token", data.data.token);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      localStorage.setItem("user", JSON.stringify(data.data.user));
-
-      toast.success(data.data.msg);
+      toast.success(data.msg);
       console.log(data);
-      setReDirect(true);
+
+      // ✅ redirect immediately after success
+      navigate("/dashboard");
     } catch (error) {
-      toast.error(error?.response?.data?.msg);
+      toast.error(error?.response?.data?.msg || "Login failed");
     }
   };
-  if (redirect) {
-    return <Navigate to="/dashboard" />;
-  }
 
   return (
     <>
