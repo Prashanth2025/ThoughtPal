@@ -8,11 +8,18 @@ const ForgotPassword = () => {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Step 1: Request OTP
   const handleForgot = async (e) => {
     e.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return toast.error("Invalid email format");
+    }
+
+    setLoading(true);
     try {
       const res = await fetch(
         "https://thoughtpal-server.onrender.com/api/v1/user/forgot-password",
@@ -24,19 +31,26 @@ const ForgotPassword = () => {
       );
       const data = await res.json();
       if (res.ok) {
-        toast.success(data.msg);
+        toast.success(data.msg || "OTP sent successfully");
         setStep("reset");
       } else {
-        toast.error(data.msg);
+        toast.error(data.msg || "Failed to send OTP");
       }
     } catch (err) {
       toast.error("Error sending OTP: " + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Step 2: Reset password with OTP
   const handleReset = async (e) => {
     e.preventDefault();
+    if (newPassword.length < 8) {
+      return toast.error("Password must be at least 8 characters long");
+    }
+
+    setLoading(true);
     try {
       const res = await fetch(
         "https://thoughtpal-server.onrender.com/api/v1/user/reset-password",
@@ -48,14 +62,18 @@ const ForgotPassword = () => {
       );
       const data = await res.json();
       if (res.ok) {
-        toast.success(data.msg);
+        toast.success(data.msg || "Password reset successful");
         setStep("done");
         setTimeout(() => navigate("/login"), 2000);
       } else {
-        toast.error(data.msg);
+        toast.error(data.msg || "Failed to reset password");
+        setOtp("");
+        setNewPassword("");
       }
     } catch (err) {
       toast.error("Error resetting password: " + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,8 +91,11 @@ const ForgotPassword = () => {
             </p>
             <form onSubmit={handleForgot}>
               <div className="mb-3">
-                <label className="form-label">Email address</label>
+                <label htmlFor="email" className="form-label">
+                  Email address
+                </label>
                 <input
+                  id="email"
                   type="email"
                   className="form-control"
                   value={email}
@@ -82,8 +103,12 @@ const ForgotPassword = () => {
                   required
                 />
               </div>
-              <button type="submit" className="btn btn-primary w-100">
-                Send OTP
+              <button
+                type="submit"
+                className="btn btn-primary w-100"
+                disabled={loading}
+              >
+                {loading ? "Sending..." : "Send OTP"}
               </button>
             </form>
           </>
@@ -97,8 +122,11 @@ const ForgotPassword = () => {
             </p>
             <form onSubmit={handleReset}>
               <div className="mb-3">
-                <label className="form-label">OTP Code</label>
+                <label htmlFor="otp" className="form-label">
+                  OTP Code
+                </label>
                 <input
+                  id="otp"
                   type="text"
                   className="form-control"
                   value={otp}
@@ -107,9 +135,12 @@ const ForgotPassword = () => {
                 />
               </div>
               <div className="mb-3">
-                <label className="form-label">New Password</label>
+                <label htmlFor="newPassword" className="form-label">
+                  New Password
+                </label>
                 <div className="input-group">
                   <input
+                    id="newPassword"
                     type={showPassword ? "text" : "password"}
                     className="form-control"
                     value={newPassword}
@@ -130,8 +161,12 @@ const ForgotPassword = () => {
                   </button>
                 </div>
               </div>
-              <button type="submit" className="btn btn-success w-100">
-                Reset Password
+              <button
+                type="submit"
+                className="btn btn-success w-100"
+                disabled={loading}
+              >
+                {loading ? "Resetting..." : "Reset Password"}
               </button>
             </form>
           </>

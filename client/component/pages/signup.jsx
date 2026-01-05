@@ -16,7 +16,7 @@ const Signup = () => {
 
   const handleSignChange = (e) => {
     const { value, name } = e.target;
-    setSignupDetails({ ...signupDetails, [name]: value });
+    setSignupDetails({ ...signupDetails, [name]: value.trim() });
   };
 
   const handleSubmit = async (e) => {
@@ -30,6 +30,15 @@ const Signup = () => {
     if (signupDetails.password.length < 8) {
       return toast.error("Password must be at least 8 characters long");
     }
+    if (
+      !/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(
+        signupDetails.password
+      )
+    ) {
+      return toast.error(
+        "Password must include uppercase, lowercase, number, and special character"
+      );
+    }
 
     setLoading(true);
     try {
@@ -37,10 +46,15 @@ const Signup = () => {
         "https://thoughtpal-server.onrender.com/api/v1/user/signup",
         signupDetails
       );
-      toast.success(data.msg);
-      navigate("/login");
+      toast.success(data.msg || "Signup successful");
+      setTimeout(() => navigate("/login"), 1500); // delay redirect
     } catch (error) {
-      toast.error(error?.response?.data?.msg || "Signup failed");
+      const message =
+        error?.response?.data?.msg || "Signup failed. Please try again.";
+      toast.error(message);
+      if (process.env.NODE_ENV === "development") {
+        console.error("Signup error:", error);
+      }
     } finally {
       setLoading(false);
     }
@@ -48,7 +62,10 @@ const Signup = () => {
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light">
-      <div className="card shadow rounded-3 p-4" style={{ maxWidth: "400px", width: "100%" }}>
+      <div
+        className="card shadow rounded-3 p-4"
+        style={{ maxWidth: "400px", width: "100%" }}
+      >
         {/* Profile Avatar */}
         <div className="text-center mb-4">
           <img
@@ -60,7 +77,9 @@ const Signup = () => {
         </div>
 
         {/* Title */}
-        <h3 className="text-center mb-4 fw-bold text-primary">Create Account</h3>
+        <h3 className="text-center mb-4 fw-bold text-primary">
+          Create Account
+        </h3>
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
@@ -74,6 +93,7 @@ const Signup = () => {
               placeholder="Full Name"
               value={signupDetails.name}
               onChange={handleSignChange}
+              autoFocus
             />
             <label htmlFor="floatingName">Full Name</label>
           </div>
@@ -112,7 +132,9 @@ const Signup = () => {
               onClick={() => setShowPassword(!showPassword)}
               aria-label="Toggle password visibility"
             >
-              <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+              <i
+                className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+              ></i>
             </span>
           </div>
 

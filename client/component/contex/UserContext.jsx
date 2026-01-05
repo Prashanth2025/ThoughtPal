@@ -1,17 +1,35 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-let Contex = createContext();
+const UserContext = createContext();
 
-let UserContex = (props) => {
-  let [user, setUser] = useState(null);
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+
+  // Load user from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  // Save user to localStorage when updated
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
+
+  const login = (userData) => setUser(userData);
+  const logout = () => setUser(null);
+
   return (
-    <Contex.Provider value={{ user, setUser }}>
-      {props.children}
-    </Contex.Provider>
+    <UserContext.Provider value={{ user, setUser, login, logout }}>
+      {children}
+    </UserContext.Provider>
   );
 };
-export const useUser = () => {
-  return useContext(Contex);
-};
 
-export default UserContex;
+export const useUser = () => useContext(UserContext);

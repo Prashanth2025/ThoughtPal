@@ -10,127 +10,160 @@ const handleSignup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
-      return res.status(400).json({ msg: "All fields are required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
     }
 
     const isUser = await User.findOne({ email });
     if (isUser) {
-      return res.status(409).json({ msg: "User already exists" });
+      return res
+        .status(409)
+        .json({ success: false, message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ name, email, password: hashedPassword });
     await newUser.save();
 
-    res.status(201).json({ msg: "User created successfully" });
+    res
+      .status(201)
+      .json({ success: true, message: "User created successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
 // -------------------- Login --------------------
-const handlelogin = async (req, res) => {
+const handleLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ msg: "All fields are required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
     }
 
-    const isUser = await User.findOne({ email });
-    if (!isUser) {
-      return res.status(404).json({ msg: "Email not found" });
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Email not found" });
     }
 
-    const isMatched = await bcrypt.compare(password, isUser.password);
+    const isMatched = await bcrypt.compare(password, user.password);
     if (!isMatched) {
-      return res.status(401).json({ msg: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ _id: isUser._id, email: isUser.email }, "Mern", {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     res.status(200).json({
-      msg: "Login successful",
+      success: true,
+      message: "Login successful",
       token,
-      user: {
-        _id: isUser._id,
-        name: isUser.name,
-        email: isUser.email,
-      },
+      data: { id: user._id, name: user.name, email: user.email },
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
 // -------------------- Get user info --------------------
 const getUserInfo = async (req, res) => {
-  const { _id } = req.payload;
   try {
-    const user = await User.findById(_id).select("-password");
-    res.status(200).json({ user });
+    const user = await User.findById(req.user.id).select("-password");
+    res.status(200).json({ success: true, data: user });
   } catch (error) {
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
 // -------------------- Update name --------------------
 const handleNameUpdate = async (req, res) => {
-  const { _id } = req.payload;
   try {
     const { name } = req.body;
     if (!name) {
-      return res.status(400).json({ msg: "Name is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Name is required" });
     }
 
-    await User.findByIdAndUpdate(_id, { $set: { name } });
-    res.status(200).json({ msg: "Name updated successfully" });
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { name },
+      { new: true }
+    ).select("-password");
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Name updated successfully",
+        data: user,
+      });
   } catch (error) {
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
 // -------------------- Update password --------------------
 const updateUserPassword = async (req, res) => {
-  const { _id } = req.payload;
   const { oldPassword, newPassword, confirmPassword } = req.body;
 
   if (!oldPassword || !newPassword || !confirmPassword) {
-    return res.status(400).json({ msg: "All fields are required" });
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required" });
   }
   if (newPassword !== confirmPassword) {
-    return res.status(400).json({ msg: "New passwords do not match" });
+    return res
+      .status(400)
+      .json({ success: false, message: "New passwords do not match" });
   }
 
   try {
-    const user = await User.findById(_id);
-    if (!user) return res.status(404).json({ msg: "User not found" });
+    const user = await User.findById(req.user.id);
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
 
     const isMatch = await bcrypt.compare(oldPassword, user.password);
     if (!isMatch)
-      return res.status(401).json({ msg: "Old password is incorrect" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Old password is incorrect" });
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await User.findByIdAndUpdate(_id, { password: hashedPassword });
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
 
-    res.status(200).json({ msg: "Password updated successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Password updated successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
 // -------------------- Nodemailer transporter --------------------
-let transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || "smtp.gmail.com",
   port: process.env.SMTP_PORT || 465,
-  secure: true, // true for 465
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, // must be App Password
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -138,21 +171,19 @@ let transporter = nodemailer.createTransport({
 const forgotPass = async (req, res) => {
   try {
     const { email } = req.body;
-
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ msg: "User not found" });
-    }
+    if (!user)
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
 
     const otp = crypto.randomInt(100000, 999999).toString();
-
     user.otp = otp;
-    user.otpExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes
+    user.otpExpiry = Date.now() + 5 * 60 * 1000;
     await user.save();
 
-    res.status(200).json({ msg: "OTP sent to email" });
+    res.status(200).json({ success: true, message: "OTP sent to email" });
 
-    // Send email in background
     transporter
       .sendMail({
         from: `"ThoughtPal" <${process.env.EMAIL_USER}>`,
@@ -164,7 +195,7 @@ const forgotPass = async (req, res) => {
       .catch((err) => console.error("Email error:", err));
   } catch (error) {
     console.error("ERROR in forgotPass:", error);
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
@@ -179,8 +210,9 @@ const resetPass = async (req, res) => {
       String(user.otp) !== String(otp) ||
       Date.now() > user.otpExpiry
     ) {
-      console.warn("DEBUG: OTP validation failed");
-      return res.status(400).json({ msg: "Invalid or expired OTP" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired OTP" });
     }
 
     user.password = await bcrypt.hash(newPassword, 10);
@@ -188,16 +220,16 @@ const resetPass = async (req, res) => {
     user.otpExpiry = null;
     await user.save();
 
-    res.json({ msg: "Password reset successful" });
+    res.json({ success: true, message: "Password reset successful" });
   } catch (error) {
     console.error("ERROR in resetPass:", error);
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
 module.exports = {
   handleSignup,
-  handlelogin,
+  handleLogin,
   getUserInfo,
   handleNameUpdate,
   updateUserPassword,

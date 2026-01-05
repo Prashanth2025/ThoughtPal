@@ -1,13 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
+import { v4 as uuidv4 } from "uuid";
 
 const CreateNotes = () => {
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [editingId, setEditingId] = useState(null); // track which note is being edited
+  const [editingId, setEditingId] = useState(null);
 
-  // Add or Update note
+  // Load notes from localStorage
+  useEffect(() => {
+    const storedNotes = localStorage.getItem("notes");
+    if (storedNotes) setNotes(JSON.parse(storedNotes));
+  }, []);
+
+  // Save notes to localStorage
+  useEffect(() => {
+    localStorage.setItem("notes", JSON.stringify(notes));
+  }, [notes]);
+
   const handleAddOrUpdate = (e) => {
     e.preventDefault();
     if (!title || !content) {
@@ -16,7 +27,6 @@ const CreateNotes = () => {
     }
 
     if (editingId) {
-      // Update existing note
       const updatedNotes = notes.map((note) =>
         note.id === editingId ? { ...note, title, content } : note
       );
@@ -24,8 +34,7 @@ const CreateNotes = () => {
       setEditingId(null);
       toast.success("Note updated successfully!");
     } else {
-      // Add new note
-      const newNote = { id: Date.now(), title, content };
+      const newNote = { id: uuidv4(), title, content, createdAt: new Date() };
       setNotes([...notes, newNote]);
       toast.success("Note added successfully!");
     }
@@ -34,13 +43,11 @@ const CreateNotes = () => {
     setContent("");
   };
 
-  // Delete note
   const handleDelete = (id) => {
     setNotes(notes.filter((note) => note.id !== id));
     toast.success("Note deleted!");
   };
 
-  // Edit note
   const handleEdit = (note) => {
     setTitle(note.title);
     setContent(note.content);
@@ -69,9 +76,26 @@ const CreateNotes = () => {
             onChange={(e) => setContent(e.target.value)}
           />
         </div>
-        <button type="submit" className="btn btn-primary w-25">
+        <button
+          type="submit"
+          className="btn btn-primary w-25"
+          disabled={!title || !content}
+        >
           {editingId ? "Update Note" : "Save Note"}
         </button>
+        {editingId && (
+          <button
+            type="button"
+            className="btn btn-secondary w-25 ms-2"
+            onClick={() => {
+              setEditingId(null);
+              setTitle("");
+              setContent("");
+            }}
+          >
+            Cancel
+          </button>
+        )}
       </form>
 
       <div className="mt-4">
@@ -81,6 +105,11 @@ const CreateNotes = () => {
               <div>
                 <h5>{note.title}</h5>
                 <p>{note.content}</p>
+                {note.createdAt && (
+                  <small className="text-muted">
+                    Created: {new Date(note.createdAt).toLocaleString()}
+                  </small>
+                )}
               </div>
               <div>
                 <button

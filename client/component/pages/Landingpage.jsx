@@ -1,13 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
-let LandingPage = () => {
-  let navigate = useNavigate();
-  let isAuth = localStorage.getItem("token");
+const LandingPage = () => {
+  const navigate = useNavigate();
+  const isAuth = localStorage.getItem("token");
 
-  if (isAuth) {
-    navigate("/create-notes");
-    return null;
-  }
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/create-notes");
+    }
+  }, [isAuth, navigate]);
+
+  if (isAuth) return null;
 
   return (
     <div className="landing-container">
@@ -16,7 +20,7 @@ let LandingPage = () => {
       </video>
 
       <div className="overlay">
-        <h1>Welcome to MyApp</h1>
+        <h1>Welcome to ThoughtPal</h1>
         <p>Your notes, your space</p>
         <div>
           <Link to="/login" className="btn btn-primary me-2">

@@ -4,25 +4,27 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const [user, setUsers] = useState(null);
+  const [user, setUser] = useState(null);
   const [newName, setNewName] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNameField, setShowNameField] = useState(false);
   const [showPasswordField, setShowPasswordField] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
-      try {
-        setUsers(JSON.parse(storedUser));
-      } catch (err) {
-        console.error("Failed to parse user:", err);
-      }
-    }
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    axios
+      .get("https://thoughtpal-server.onrender.com/api/v1/user", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setUser(res.data.user))
+      .catch((err) => console.error("Failed to fetch user:", err));
   }, []);
 
   const getToken = () => localStorage.getItem("token");
@@ -34,20 +36,23 @@ const Profile = () => {
     const token = getToken();
     if (!token) return toast.error("You must be logged in");
 
+    setLoading(true);
     try {
       const res = await axios.patch(
         "https://thoughtpal-server.onrender.com/api/v1/user/name",
-        { name: newName },
+        { name: newName.trim() },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      toast.success(res.data.msg);
-      const updatedUser = { ...user, name: newName };
+      toast.success(res.data.msg || "Name updated successfully");
+      const updatedUser = { ...user, name: newName.trim() };
       localStorage.setItem("user", JSON.stringify(updatedUser));
-      setUsers(updatedUser);
+      setUser(updatedUser);
       setNewName("");
       setShowNameField(false);
     } catch (err) {
       toast.error(err.response?.data?.msg || "Error updating name");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,16 +65,21 @@ const Profile = () => {
     if (newPassword !== confirmPassword) {
       return toast.error("New passwords do not match");
     }
+    if (newPassword.length < 8) {
+      return toast.error("Password must be at least 8 characters long");
+    }
+
     const token = getToken();
     if (!token) return toast.error("You must be logged in");
 
+    setLoading(true);
     try {
       const res = await axios.patch(
         "https://thoughtpal-server.onrender.com/api/v1/user/password",
         { oldPassword, newPassword, confirmPassword },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      toast.success(res.data.msg);
+      toast.success(res.data.msg || "Password updated successfully");
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -77,6 +87,8 @@ const Profile = () => {
       handleLogout(); // auto logout
     } catch (err) {
       toast.error(err.response?.data?.msg || "Error updating password");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,9 +108,9 @@ const Profile = () => {
           <>
             <div className="mb-3">
               <strong>Name:</strong>
-              <p className="border border-2 border rounded p-2">{user.name}</p>
+              <p className="border border-2 rounded p-2">{user.name}</p>
               <strong>Email:</strong>
-              <p className="border border-2 border rounded p-2">{user.email}</p>
+              <p className="border border-2 rounded p-2">{user.email}</p>
             </div>
 
             {/* Update Name */}
@@ -110,9 +122,14 @@ const Profile = () => {
                   placeholder="Enter new name"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
+                  autoFocus
                 />
-                <button type="submit" className="btn btn-primary w-100 mb-2">
-                  Save
+                <button
+                  type="submit"
+                  className="btn btn-primary w-100 mb-2"
+                  disabled={loading}
+                >
+                  {loading ? "Saving..." : "Save"}
                 </button>
                 <button
                   type="button"
@@ -143,6 +160,7 @@ const Profile = () => {
                   placeholder="Enter old password"
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
+                  autoFocus
                 />
                 <input
                   type="password"
@@ -158,8 +176,12 @@ const Profile = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
-                <button type="submit" className="btn btn-warning w-100 mb-2">
-                  Save
+                <button
+                  type="submit"
+                  className="btn btn-warning w-100 mb-2"
+                  disabled={loading}
+                >
+                  {loading ? "Saving..." : "Save"}
                 </button>
                 <button
                   type="button"
