@@ -1,34 +1,22 @@
-/* Global styles */
-body {
-  font-style: normal; /* readability */
-  margin: 0;
-  padding: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-}
-
 .card {
   border-radius: 12px;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
 }
 
 .btn-primary {
   border-radius: 8px;
   font-weight: 600;
-  transition: all 0.2s ease-in-out;
 }
 
-.btn-primary:hover {
-  background-color: #0056b3;
-  transform: scale(1.02);
+* {
+  font-style: italic;
 }
 
 .pg {
   text-decoration: none;
 }
 
-/* Landing Page */
+/* landing Page */
+
 .landing-container {
   height: 100vh;
   width: 100%;
@@ -36,7 +24,6 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
-  text-align: center;
 }
 
 .bg-video {
@@ -50,21 +37,12 @@ body {
 }
 
 .overlay {
+  text-align: center;
   color: white;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 2rem;
-  border-radius: 12px;
 }
 
-.overlay h1 {
-  margin-bottom: 1rem;
-}
+/* dashboard */
 
-.overlay p {
-  margin-bottom: 2rem;
-}
-
-/* Dashboard */
 .dashboard-container {
   display: flex;
   justify-content: center;
@@ -77,8 +55,7 @@ body {
   background: #fff;
   border-radius: 12px;
   padding: 2rem;
-  max-width: 400px;
-  width: 100%;
+  width: 400px;
   text-align: center;
   transition: transform 0.2s ease-in-out;
 }
@@ -103,82 +80,4 @@ body {
 .no-user {
   color: #888;
   font-style: italic;
-}
-
-/* Forms (Login, Signup, Profile, ForgotPassword) */
-form input,
-form textarea {
-  width: 100% !important;
-}
-
-.input-group-text {
-  cursor: pointer;
-}
-
-/* Notes */
-.notes-container {
-  padding: 1rem;
-}
-
-.notes-container .card {
-  margin-bottom: 1rem;
-}
-
-/* Responsive rules */
-@media (max-width: 768px) {
-  .dashboard-card {
-    padding: 1.5rem;
-  }
-
-  .dashboard-title {
-    font-size: 1.5rem;
-  }
-
-  .dashboard-details p {
-    font-size: 1rem;
-  }
-
-  .overlay {
-    padding: 1rem;
-  }
-
-  .overlay h1 {
-    font-size: 1.5rem;
-  }
-
-  .overlay p {
-    font-size: 1rem;
-  }
-
-  .overlay .btn {
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-
-  form input,
-  form textarea {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .dashboard-title {
-    font-size: 1.2rem;
-  }
-
-  .dashboard-details p {
-    font-size: 0.9rem;
-  }
-
-  .overlay h1 {
-    font-size: 1.2rem;
-  }
-
-  .overlay p {
-    font-size: 0.9rem;
-  }
-
-  .card {
-    padding: 1rem;
-  }
 }
