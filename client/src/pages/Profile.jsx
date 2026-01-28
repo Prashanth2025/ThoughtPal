@@ -77,7 +77,7 @@ const Profile = () => {
         className="card shadow-lg p-4"
         style={{ backgroundColor: "#1c1c1c", color: "#f5f5f5" }}
       >
-        <h2 className="mb-3 text-uppercase fw-bold">
+        <h2 className="mb-3 text-uppercase fw-bold m-auto">
           <i className="bi bi-person-circle me-2"></i> Profile
         </h2>
         <h4>
@@ -89,12 +89,12 @@ const Profile = () => {
           {user?.email}
         </h5>
 
-        <div className="mt-4 d-flex gap-3">
+        <div className="mt-4 d-flex gap-3 w-75 m-auto">
           <button
             className="btn btn-primary fw-bold flex-fill"
             onClick={() => setIsUpdate(isUpdate ? false : "name")}
           >
-            <i className="bi bi-pencil-square me-2"></i> Update Name
+            <i className="bi bi-pencil-square me-2 w-25"></i> Update Name
           </button>
           <button
             className="btn btn-danger fw-bold flex-fill"
@@ -141,10 +141,10 @@ const Profile = () => {
                 style={{
                   position: "absolute",
                   right: "10px",
-                  top: "70%",
+                  top: "55%",
                   cursor: "pointer",
                   fontSize: "1.2rem",
-                  color: "orange",
+                  color: "black",
                 }}
               ></i>
             </div>
@@ -164,10 +164,10 @@ const Profile = () => {
                 style={{
                   position: "absolute",
                   right: "10px",
-                  top: "70%",
+                  top: "55%",
                   cursor: "pointer",
                   fontSize: "1.2rem",
-                  color: "red",
+                  color: "black",
                 }}
               ></i>
             </div>
