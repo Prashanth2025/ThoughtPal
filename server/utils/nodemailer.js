@@ -4,10 +4,10 @@ require("dotenv").config();
 // Create a transporter using Ethereal test credentials.
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: "SendGrid",
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASSKEY,
+    user: "apikey",
+    pass: process.env.SENDGRID_API_KEY,
   },
 });
 
