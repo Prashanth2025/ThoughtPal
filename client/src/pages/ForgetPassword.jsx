@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
   const [isVerifyOtp, setIsVerifyOtp] = useState(false);
@@ -16,7 +16,7 @@ const ForgetPassword = () => {
     if (!email) return toast.error("Provide email");
 
     try {
-      const res = await axios.post("http://localhost:2000/api/v1/otp/create", {
+      const res = await axios.post(`${API_URL}/api/v1/otp/create`, {
         email,
       });
       toast.success(res.data.message);
@@ -31,7 +31,7 @@ const ForgetPassword = () => {
     if (!otp) return toast.error("Provide OTP");
 
     try {
-      const res = await axios.post("http://localhost:2000/api/v1/otp/verify", {
+      const res = await axios.post(`${API_URL}/api/v1/otp/verify`, {
         email,
         otp,
       });
@@ -49,7 +49,7 @@ const ForgetPassword = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:2000/api/v1/otp/password",
+        `${API_URL}/api/v1/otp/password`,
         { password, email },
       );
       toast.success(res.data.message);

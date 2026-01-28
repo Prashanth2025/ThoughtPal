@@ -6,6 +6,8 @@ import { getUserDetails } from "../utils/getUserDetailds";
 import { useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+const API_URL = import.meta.env.VITE_BACKEND_URL;
+
 const Dashboard = () => {
   const { setUser, user } = useUser();
   const [notes, setNotes] = useState([]);
@@ -15,7 +17,7 @@ const Dashboard = () => {
   const getNotes = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:2000/api/v1/note", {
+      const res = await axios.get(`${API_URL}/api/v1/note`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotes(res.data.notes);
@@ -40,7 +42,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.delete(
-        `http://localhost:2000/api/v1/note/delete/${_id}`,
+        `${API_URL}/api/v1/note/delete/${_id}`,
         { headers: { Authorization: `Bearer ${token}` } },
       );
       toast.success(res.data.message);

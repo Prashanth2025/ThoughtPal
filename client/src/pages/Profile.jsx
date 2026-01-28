@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Profile = () => {
   const { user, setUser } = useUser();
@@ -33,7 +34,7 @@ const Profile = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.patch(
-        "http://localhost:2000/api/v1/user/name",
+        `${API_URL}/api/v1/user/name`,
         { name },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -54,7 +55,7 @@ const Profile = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.patch(
-        "http://localhost:2000/api/v1/user/password",
+        `${API_URL}/api/v1/user/password`,
         { password, newPassword },
         { headers: { Authorization: `Bearer ${token}` } },
       );

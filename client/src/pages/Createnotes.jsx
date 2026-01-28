@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getUserDetails } from "../utils/getUserDetailds";
 import toast from "react-hot-toast";
 import axios from "axios";
-
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 const Createnotes = () => {
   const [title, setTitle] = useState("");
   const [inp, setInp] = useState("");
@@ -24,7 +24,7 @@ const Createnotes = () => {
   const fetchNotes = async () => {
     try {
       const token = localStorage.getItem("token");
-      const { data } = await axios.get("http://localhost:2000/api/v1/note", {
+      const { data } = await axios.get(`${API_URL}/api/v1/note`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotes(data.notes);
@@ -42,7 +42,7 @@ const Createnotes = () => {
     try {
       const token = localStorage.getItem("token");
       const { data } = await axios.post(
-        "http://localhost:2000/api/v1/note/create",
+        `${API_URL}/api/v1/note/create`,
         { title, note: inp },
         {
           headers: {
@@ -64,7 +64,7 @@ const Createnotes = () => {
     try {
       const token = localStorage.getItem("token");
       const { data } = await axios.delete(
-        `http://localhost:2000/api/v1/note/delete/${id}`,
+        `${API_URL}/api/v1/note/delete/${id}`,
         { headers: { Authorization: `Bearer ${token}` } },
       );
       toast.success(data.message);

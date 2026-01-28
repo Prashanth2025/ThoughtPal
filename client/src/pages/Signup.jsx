@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import bgImage from "../assets/sunset.jpg";
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Signup = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:2000/api/v1/user/signup",
+        `${API_URL}/api/v1/user/signup`,
         signupDetails,
       );
       toast.success(res.data.message);

@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import bgImage from "../assets/sunset.jpg";
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Login = () => {
   const [loginDetails, setLoginDetails] = useState({ email: "", password: "" });
@@ -21,7 +22,7 @@ const Login = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:2000/api/v1/user/login",
+        `${API_URL}/api/v1/user/login`,
         loginDetails,
       );
       localStorage.setItem("token", data.token);
