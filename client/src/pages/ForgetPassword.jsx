@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 const API_URL = import.meta.env.VITE_BACKEND_URL;
+
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
   const [isVerifyOtp, setIsVerifyOtp] = useState(false);
@@ -13,25 +14,30 @@ const ForgetPassword = () => {
 
   const handleGetOtp = async (e) => {
     e.preventDefault();
-    if (!email) return toast.error("Provide email");
+    if (!email) return toast.error("Please provide your email");
 
     try {
-      const res = await axios.post(`${API_URL}/api/v1/otp/create`, {
+      const res = await axios.post(`http://localhost:2000/api/v1/otp/create`, {
         email,
       });
-      toast.success(res.data.message);
+
+      // Updated message to guide user
+      toast.success(
+        `${res.data.message} If you don't see it in your inbox, please check your spam/junk folder.`,
+      );
       setIsVerifyOtp(true);
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Failed to send OTP");
     }
   };
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
-    if (!otp) return toast.error("Provide OTP");
+    if (!otp) return toast.error("Please provide OTP");
 
     try {
-      const res = await axios.post(`${API_URL}/api/v1/otp/verify`, {
+      const res = await axios.post(`http://localhost:2000/api/v1/otp/verify`, {
         email,
         otp,
       });
@@ -39,23 +45,30 @@ const ForgetPassword = () => {
       setIsResetPassword(true);
       setIsVerifyOtp(false);
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Failed to verify OTP");
     }
   };
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    if (!password) return toast.error("Provide password");
+    if (!password) return toast.error("Please provide new password");
 
     try {
       const res = await axios.post(
-        `${API_URL}/api/v1/otp/password`,
-        { password, email },
+        `http://localhost:2000/api/v1/otp/password`,
+        {
+          password,
+          email,
+        },
       );
       toast.success(res.data.message);
       navigate("/login");
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      console.log(error);
+      toast.error(
+        error?.response?.data?.message || "Failed to change password",
+      );
     }
   };
 

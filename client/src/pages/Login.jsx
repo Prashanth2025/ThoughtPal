@@ -22,7 +22,7 @@ const Login = () => {
 
     try {
       const { data } = await axios.post(
-        `${API_URL}/api/v1/user/login`,
+        `http://localhost:2000/api/v1/user/login`,
         loginDetails,
       );
       localStorage.setItem("token", data.token);

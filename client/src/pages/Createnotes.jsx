@@ -23,7 +23,7 @@ const Createnotes = () => {
         return navigate("/login");
       }
 
-      const { data } = await axios.get(`${API_URL}/api/v1/note`, {
+      const { data } = await axios.get(`http://localhost:2000/api/v1/note`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -48,7 +48,7 @@ const Createnotes = () => {
     try {
       const token = localStorage.getItem("token");
       const { data } = await axios.post(
-        `${API_URL}/api/v1/note/create`,
+        `http://localhost:2000/api/v1/note/create`,
         { title, note: inp },
         {
           headers: {
@@ -71,7 +71,7 @@ const Createnotes = () => {
     try {
       const token = localStorage.getItem("token");
       const { data } = await axios.delete(
-        `${API_URL}/api/v1/note/delete/${id}`,
+        `http://localhost:2000/api/v1/note/delete/${id}`,
         { headers: { Authorization: `Bearer ${token}` } },
       );
 

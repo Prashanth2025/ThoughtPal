@@ -34,7 +34,7 @@ const Profile = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.patch(
-        `${API_URL}/api/v1/user/name`,
+        `http://localhost:2000/api/v1/user/name`,
         { name },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -55,7 +55,7 @@ const Profile = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.patch(
-        `${API_URL}/api/v1/user/password`,
+        `http://localhost:2000/api/v1/user/password`,
         { password, newPassword },
         { headers: { Authorization: `Bearer ${token}` } },
       );

@@ -1,10 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const connetDb = require("./db/dbConnect");
 const userRouter = require("./route/userRouter");
 const cors = require("cors");
 const noteRouter = require("./route/noteRouter");
 const otpRouter = require("./route/otpRouter");
-require("dotenv").config();
 
 const app = express();
 
