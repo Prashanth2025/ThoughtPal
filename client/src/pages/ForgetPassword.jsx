@@ -17,7 +17,7 @@ const ForgetPassword = () => {
     if (!email) return toast.error("Please provide your email");
 
     try {
-      const res = await axios.post(`http://localhost:2000/api/v1/otp/create`, {
+      const res = await axios.post(`${API_URL}/api/v1/otp/create`, {
         email,
       });
 
@@ -37,7 +37,7 @@ const ForgetPassword = () => {
     if (!otp) return toast.error("Please provide OTP");
 
     try {
-      const res = await axios.post(`http://localhost:2000/api/v1/otp/verify`, {
+      const res = await axios.post(`${API_URL}/api/v1/otp/verify`, {
         email,
         otp,
       });
@@ -55,13 +55,10 @@ const ForgetPassword = () => {
     if (!password) return toast.error("Please provide new password");
 
     try {
-      const res = await axios.post(
-        `http://localhost:2000/api/v1/otp/password`,
-        {
-          password,
-          email,
-        },
-      );
+      const res = await axios.post(`${API_URL}/api/v1/otp/password`, {
+        password,
+        email,
+      });
       toast.success(res.data.message);
       navigate("/login");
     } catch (error) {

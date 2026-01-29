@@ -17,7 +17,7 @@ const Dashboard = () => {
   const getNotes = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`http://localhost:2000/api/v1/note`, {
+      const res = await axios.get(`${API_URL}/api/v1/note`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotes(res.data.notes);
@@ -41,10 +41,9 @@ const Dashboard = () => {
     if (!window.confirm("Are you sure you want to delete this note?")) return;
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.delete(
-        `http://localhost:2000/api/v1/note/delete/${_id}`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+      const res = await axios.delete(`${API_URL}/api/v1/note/delete/${_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       toast.success(res.data.message);
       getNotes();
     } catch (error) {

@@ -29,7 +29,7 @@ const Signup = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:2000/api/v1/user/signup`,
+        `${API_URL}/api/v1/user/signup`,
         signupDetails,
       );
       toast.success(res.data.message);
