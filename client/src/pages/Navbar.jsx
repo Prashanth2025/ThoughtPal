@@ -19,7 +19,7 @@ const Navbar = () => {
       <div className="container-fluid d-flex justify-content-between align-items-center">
         {/* Brand */}
         <Link className="navbar-brand fw-bold" to="/dashboard">
-          NotesApp
+          ThoughtPal
         </Link>
 
         {/* Links */}
