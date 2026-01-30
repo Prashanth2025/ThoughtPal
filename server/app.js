@@ -5,6 +5,8 @@ const userRouter = require("./route/userRouter");
 const cors = require("cors");
 const noteRouter = require("./route/noteRouter");
 const otpRouter = require("./route/otpRouter");
+const path = require("path");
+
 
 const app = express();
 
@@ -17,6 +19,16 @@ connetDb();
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/note", noteRouter);
 app.use("/api/v1/otp", otpRouter);
+
+
+const clientPath=path.join(__dirname,"../client/dist")
+app.use(express.static(clientPath))
+
+app.get("*",(req,res)=>{
+  res.sendFile(path.join(clientPath,"index.html"))
+})
+
+
 app.listen(process.env.PORT, () => {
   console.log("server is running");
 });
