@@ -5,7 +5,6 @@ const userRouter = require("./route/userRouter");
 const cors = require("cors");
 const noteRouter = require("./route/noteRouter");
 const otpRouter = require("./route/otpRouter");
-const path = require("path");
 
 
 const app = express();
@@ -21,12 +20,6 @@ app.use("/api/v1/note", noteRouter);
 app.use("/api/v1/otp", otpRouter);
 
 
-const clientPath=path.join(__dirname,"../client/dist")
-app.use(express.static(clientPath))
-
-app.use((req,res)=>{
-  res.sendFile(path.join(clientPath,"index.html"))
-})
 
 
 app.listen(process.env.PORT, () => {
