@@ -3,11 +3,13 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import bgImage from "../assets/sunset.jpg";
+
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Login = () => {
   const [loginDetails, setLoginDetails] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,19 +19,25 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!loginDetails.email) return toast.error("Email field is empty");
     if (!loginDetails.password) return toast.error("Password field is empty");
 
     try {
+      setLoading(true);
+
       const { data } = await axios.post(
         `${API_URL}/api/v1/user/login`,
         loginDetails,
       );
+
       localStorage.setItem("token", data.token);
       toast.success(data.message);
       navigate("/dashboard");
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,15 +64,17 @@ const Login = () => {
         }}
       >
         <h2 className="text-center mb-4">🔐 Login</h2>
+
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <input
               type="email"
               name="email"
               className="form-control"
-              value={loginDetails.email}
               placeholder="Email"
+              value={loginDetails.email}
               onChange={handleChange}
+              disabled={loading}
             />
           </div>
 
@@ -76,6 +86,7 @@ const Login = () => {
               placeholder="Password"
               value={loginDetails.password}
               onChange={handleChange}
+              disabled={loading}
             />
             <i
               className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
@@ -92,8 +103,12 @@ const Login = () => {
             ></i>
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">
-            Login
+          <button
+            type="submit"
+            className="btn btn-primary w-100 d-flex align-items-center justify-content-center"
+            disabled={loading}
+          >
+            {loading ? <span className="rotate-loader"></span> : "Login"}
           </button>
         </form>
 

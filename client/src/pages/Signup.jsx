@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import bgImage from "../assets/sunset.jpg";
+
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Signup = () => {
@@ -13,6 +14,7 @@ const Signup = () => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { value, name } = e.target;
@@ -28,14 +30,19 @@ const Signup = () => {
     if (!password) return toast.error("Password field is mandatory");
 
     try {
+      setLoading(true);
+
       const res = await axios.post(
         `${API_URL}/api/v1/user/signup`,
         signupDetails,
       );
+
       toast.success(res.data.message);
       navigate("/login");
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Signup failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,6 +69,7 @@ const Signup = () => {
         }}
       >
         <h2 className="text-center mb-4">📝 Signup</h2>
+
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <input
@@ -71,6 +79,7 @@ const Signup = () => {
               placeholder="Name"
               onChange={handleChange}
               className="form-control"
+              disabled={loading}
             />
           </div>
 
@@ -82,6 +91,7 @@ const Signup = () => {
               placeholder="Email"
               onChange={handleChange}
               className="form-control"
+              disabled={loading}
             />
           </div>
 
@@ -93,10 +103,11 @@ const Signup = () => {
               placeholder="Password"
               onChange={handleChange}
               className="form-control"
+              disabled={loading}
             />
             <i
               className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => !loading && setShowPassword(!showPassword)}
               style={{
                 position: "absolute",
                 right: "10px",
@@ -109,8 +120,12 @@ const Signup = () => {
             ></i>
           </div>
 
-          <button type="submit" className="btn btn-success w-100">
-            Signup
+          <button
+            type="submit"
+            className="btn btn-success w-100 d-flex align-items-center justify-content-center"
+            disabled={loading}
+          >
+            {loading ? <span className="rotate-loader"></span> : "Signup"}
           </button>
         </form>
 
