@@ -89,19 +89,21 @@ const Createnotes = () => {
 
       <form onSubmit={handleSubmit} className="card p-3 shadow-sm mb-4">
         <div className="mb-3">
-          <label className="form-label">Title</label>
+         
           <input
             type="text"
             className="form-control"
+            placeholder="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Content</label>
+         
           <textarea
             className="form-control"
+            placeholder="content"
             value={inp}
             onChange={(e) => setInp(e.target.value)}
             rows="4"
