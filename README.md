@@ -31,7 +31,7 @@
 * Frontend: Render Static Site
 * Backend: Render Web Service
 * Database: MongoDB Atlas
-🔗 **Live Demo:** https://thoughtpal-1.onrender.com/
+* 🔗 **Live Demo:** https://thoughtpal-1.onrender.com/
 
 ---
 
