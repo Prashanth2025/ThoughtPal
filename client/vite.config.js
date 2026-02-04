@@ -9,7 +9,7 @@ export default defineConfig({
       targets: [
         {
           src: "public/_redirects", // ✅ correct relative path
-          dest: ".", // copy to dist root
+          dest: "client/dist", // copy to dist root
         },
       ],
     }),
