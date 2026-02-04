@@ -9,7 +9,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Dashboard = () => {
-  const { setUser, user } = useUser();
+  const { setUser } = useUser();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const Dashboard = () => {
       return navigate("/login");
     }
     getNotes();
-  }, []);
+  }, [navigate, setUser]);
 
   const handleDeleteNote = async (_id) => {
     if (!window.confirm("Are you sure you want to delete this note?")) return;
