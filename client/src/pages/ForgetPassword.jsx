@@ -21,12 +21,8 @@ const ForgetPassword = () => {
 
     try {
       setLoading(true);
-
       const res = await axios.post(`${API_URL}/api/v1/otp/create`, { email });
-
-      toast.success(
-        `${res.data.message} If you don't see it, check spam/junk folder.`,
-      );
+      toast.success(`${res.data.message} Check spam/junk folder if needed.`);
       setIsVerifyOtp(true);
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to send OTP");
@@ -41,12 +37,10 @@ const ForgetPassword = () => {
 
     try {
       setLoading(true);
-
       const res = await axios.post(`${API_URL}/api/v1/otp/verify`, {
         email,
         otp,
       });
-
       toast.success(res.data.message);
       setIsResetPassword(true);
       setIsVerifyOtp(false);
@@ -63,12 +57,10 @@ const ForgetPassword = () => {
 
     try {
       setLoading(true);
-
       const res = await axios.post(`${API_URL}/api/v1/otp/password`, {
         password,
         email,
       });
-
       toast.success(res.data.message);
       navigate("/login");
     } catch (error) {
@@ -81,12 +73,12 @@ const ForgetPassword = () => {
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: "420px" }}>
+    <div className="forget-container">
       <h2 className="text-center mb-4">🔑 Forget Password</h2>
 
       {/* STEP 1 */}
       {!isVerifyOtp && !isResetPassword && (
-        <form onSubmit={handleGetOtp} className="card p-4 shadow-sm">
+        <form onSubmit={handleGetOtp} className="card p-4 shadow-sm form-card">
           <input
             type="email"
             className="form-control mb-3"
@@ -94,8 +86,8 @@ const ForgetPassword = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={loading}
+            aria-label="Email"
           />
-
           <button
             type="submit"
             className="btn btn-primary w-100 d-flex justify-content-center"
@@ -108,7 +100,10 @@ const ForgetPassword = () => {
 
       {/* STEP 2 */}
       {isVerifyOtp && (
-        <form onSubmit={handleSendOtp} className="card p-4 shadow-sm mt-3">
+        <form
+          onSubmit={handleSendOtp}
+          className="card p-4 shadow-sm form-card mt-3"
+        >
           <input
             type="text"
             className="form-control mb-3"
@@ -116,8 +111,8 @@ const ForgetPassword = () => {
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
             disabled={loading}
+            aria-label="OTP"
           />
-
           <button
             type="submit"
             className="btn btn-success w-100 d-flex justify-content-center"
@@ -132,7 +127,7 @@ const ForgetPassword = () => {
       {isResetPassword && (
         <form
           onSubmit={handleChangePassword}
-          className="card p-4 shadow-sm mt-3"
+          className="card p-4 shadow-sm form-card mt-3"
         >
           <input
             type="password"
@@ -141,8 +136,8 @@ const ForgetPassword = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
+            aria-label="New Password"
           />
-
           <button
             type="submit"
             className="btn btn-warning w-100 d-flex justify-content-center"

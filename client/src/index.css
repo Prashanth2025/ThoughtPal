@@ -1,82 +1,39 @@
-/* landing page */
-.landing-container {
-  position: relative;
-  height: 100vh;
-  width: 100%;
-  overflow: hidden;
-  font-family: "Segoe UI", sans-serif;
-}
-
-.background-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
-}
-
-.overlay {
-  position: relative;
-  z-index: 1;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: white;
-  padding: 0 20px;
-}
-
+/* Responsive typography */
 .title {
-  font-size: 4rem;
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-size: clamp(2rem, 6vw, 4rem); /* scales between mobile and desktop */
 }
 
 .tagline {
-  font-size: 1.5rem;
-  margin-bottom: 30px;
+  font-size: clamp(1rem, 3vw, 1.5rem);
 }
 
-.buttons {
-  display: flex;
-  gap: 20px;
+/* Buttons stack vertically on small screens */
+@media (max-width: 576px) {
+  .buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%; /* full width buttons on mobile */
+    text-align: center;
+  }
 }
 
-.btn {
-  padding: 12px 30px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: 0.3s ease;
+/* Ensure overlay text stays readable */
+.overlay {
+  background: rgba(0, 0, 0, 0.4); /* subtle dark overlay for contrast */
 }
-
-.login-btn {
-  background-color: #007bff;
-  color: white;
-}
-
-.signup-btn {
-  background-color: #28a745;
-  color: white;
-}
-
-.btn:hover {
-  opacity: 0.85;
-}
-
-/* LOGIN  */
-
+/* LOGIN */
 .login-container {
   position: relative;
   height: 100vh;
   width: 100%;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Segoe UI", sans-serif;
 }
 
 .bg-image {
@@ -93,48 +50,49 @@
   position: relative;
   z-index: 1;
   max-width: 400px;
+  width: 100%;
   margin: auto;
   padding: 30px;
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.6); /* transparent black overlay */
+  background: rgba(0, 0, 0, 0.6);
   color: white;
-  top: 50%;
-  transform: translateY(-50%);
-}
-/* signup */
-
-.signup-container {
-  position: relative;
-  height: 100vh;
-  width: 100%;
-  overflow: hidden;
 }
 
-.bg-image {
-  background: url("../assets/signup-bg.jpg") no-repeat center center/cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 0;
+/* Responsive typography */
+.form-overlay h2 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
 }
 
-.form-overlay {
-  position: relative;
-  z-index: 1;
-  max-width: 400px;
-  margin: auto;
-  padding: 30px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.6); /* transparent black overlay */
-  color: white;
-  top: 50%;
-  transform: translateY(-50%);
+/* Inputs and buttons scale nicely */
+.form-control {
+  font-size: 1rem;
+  padding: 10px;
 }
 
-/* login shimmer  */
+/* Buttons stack better on small screens */
+@media (max-width: 576px) {
+  .form-overlay {
+    width: 90%;
+    padding: 20px;
+  }
 
+  .form-control {
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .rotate-loader {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+  }
+}
+
+/* login shimmer */
 .rotate-loader {
   width: 20px;
   height: 20px;
@@ -152,8 +110,75 @@
     transform: rotate(360deg);
   }
 }
+/* signup */
+.signup-container {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Segoe UI", sans-serif;
+}
 
-/* signup shimmer  */
+.bg-image {
+  background: url("../assets/signup-bg.jpg") no-repeat center center/cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+.form-overlay {
+  position: relative;
+  z-index: 1;
+  max-width: 400px;
+  width: 100%;
+  margin: auto;
+  padding: 30px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.6); /* transparent black overlay */
+  color: white;
+}
+
+/* Responsive typography */
+.form-overlay h2 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+/* Inputs and buttons scale nicely */
+.form-control {
+  font-size: 1rem;
+  padding: 10px;
+}
+
+/* Buttons and form adjust on small screens */
+@media (max-width: 576px) {
+  .form-overlay {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .form-control {
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .rotate-loader {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+  }
+}
+
+/* signup shimmer */
 .rotate-loader {
   width: 20px;
   height: 20px;
@@ -166,5 +191,114 @@
 @keyframes rotate {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Dashboard */
+.dashboard-container {
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Note cards */
+.note-card {
+  background-color: #fdfdfd;
+  border-radius: 12px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.note-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Forget Password */
+.forget-container {
+  max-width: 420px;
+  margin: 60px auto;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.form-card {
+  border-radius: 12px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .forget-container {
+    max-width: 90%;
+    margin: 30px auto;
+  }
+
+  .form-control {
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .rotate-loader {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+  }
+}
+
+/* Loader */
+.rotate-loader {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid #fff;
+  border-radius: 50%;
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Ensure smooth transition for collapse */
+.navbar-collapse {
+  transition: max-height 0.3s ease;
+  overflow: hidden;
+}
+
+.navbar-collapse.collapse {
+  max-height: 0;
+}
+
+.navbar-collapse.show {
+  max-height: 500px; /* enough to show all links */
+}
+
+.profile-container {
+  max-width: 700px;
+}
+
+.profile-card {
+  background-color: #1c1c1c;
+  color: #f5f5f5;
+  border-radius: 12px;
+}
+
+.profile-card h2 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+@media (max-width: 576px) {
+  .profile-container {
+    max-width: 90%;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 10px;
   }
 }
