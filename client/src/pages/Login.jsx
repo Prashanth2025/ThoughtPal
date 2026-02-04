@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import bgImage from "../assets/sunset.jpg";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -41,9 +42,27 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="bg-image"></div>
-      <div className="form-overlay">
+    <div
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <div
+        style={{
+          background: "rgba(0,0,0,0.6)",
+          padding: "30px",
+          borderRadius: "12px",
+          maxWidth: "400px",
+          width: "100%",
+          color: "white",
+        }}
+      >
         <h2 className="text-center mb-4">🔐 Login</h2>
 
         <form onSubmit={handleSubmit}>
@@ -72,7 +91,6 @@ const Login = () => {
             <i
               className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
               onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? "Hide password" : "Show password"}
               style={{
                 position: "absolute",
                 right: "10px",
@@ -96,7 +114,7 @@ const Login = () => {
 
         <div className="text-center mt-3">
           <small>
-            Don’t have an account?{" "}
+            Don't have an account?{" "}
             <Link to="/signup" className="text-info">
               Signup
             </Link>

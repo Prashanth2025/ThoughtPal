@@ -5,7 +5,6 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
-
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Profile = () => {
@@ -73,9 +72,12 @@ const Profile = () => {
   };
 
   return (
-    <div className="profile-container container mt-5">
-      <div className="profile-card card shadow-lg p-4">
-        <h2 className="mb-3 text-uppercase fw-bold text-center">
+    <div className="container mt-5" style={{ maxWidth: "700px" }}>
+      <div
+        className="card shadow-lg p-4"
+        style={{ backgroundColor: "#1c1c1c", color: "#f5f5f5" }}
+      >
+        <h2 className="mb-3 text-uppercase fw-bold m-auto">
           <i className="bi bi-person-circle me-2"></i> Profile
         </h2>
         <h4>
@@ -87,12 +89,12 @@ const Profile = () => {
           {user?.email}
         </h5>
 
-        <div className="mt-4 d-flex gap-3 w-75 m-auto flex-wrap">
+        <div className="mt-4 d-flex gap-3 w-75 m-auto">
           <button
             className="btn btn-primary fw-bold flex-fill"
             onClick={() => setIsUpdate(isUpdate ? false : "name")}
           >
-            <i className="bi bi-pencil-square me-2"></i> Update Name
+            <i className="bi bi-pencil-square me-2 w-25"></i> Update Name
           </button>
           <button
             className="btn btn-danger fw-bold flex-fill"
@@ -136,7 +138,6 @@ const Profile = () => {
               <i
                 className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
                 onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
                 style={{
                   position: "absolute",
                   right: "10px",
@@ -160,7 +161,6 @@ const Profile = () => {
               <i
                 className={`bi ${showNewPassword ? "bi-eye-slash" : "bi-eye"}`}
                 onClick={() => setShowNewPassword(!showNewPassword)}
-                aria-label={showNewPassword ? "Hide password" : "Show password"}
                 style={{
                   position: "absolute",
                   right: "10px",

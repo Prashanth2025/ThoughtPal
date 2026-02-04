@@ -22,7 +22,7 @@ const Dashboard = () => {
       });
       setNotes(res.data.notes);
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to fetch notes");
+      toast.error(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -47,34 +47,28 @@ const Dashboard = () => {
       toast.success(res.data.message);
       getNotes();
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Delete failed");
+      toast.error(error?.response?.data?.message);
     }
   };
 
   return (
-    <div className="dashboard-container container py-4">
+    <div className="container mt-4">
       <h2 className="mb-4">
         <i className="bi bi-journal-text me-2"></i> Dashboard
       </h2>
 
       {loading ? (
-        <div className="text-center my-5">
-          <div className="spinner-border text-primary" role="status"></div>
-          <p className="text-muted mt-2">Loading notes...</p>
-        </div>
+        <p className="text-muted">Loading notes...</p>
       ) : notes.length === 0 ? (
-        <div className="text-center my-5">
-          <i
-            className="bi bi-sticky text-secondary"
-            style={{ fontSize: "2rem" }}
-          ></i>
-          <p className="text-muted mt-3">No notes yet. Create one!</p>
-        </div>
+        <p className="text-muted">No notes yet. Create one!</p>
       ) : (
         <div className="row">
           {notes.map((n) => (
             <div key={n._id} className="col-md-6 col-lg-4 mb-4">
-              <div className="note-card card h-100 shadow-sm border-0">
+              <div
+                className="card h-100 shadow-sm border-0"
+                style={{ backgroundColor: "#fdfdfd", borderRadius: "12px" }}
+              >
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title fw-bold text-primary">
                     <i className="bi bi-sticky me-2"></i>
