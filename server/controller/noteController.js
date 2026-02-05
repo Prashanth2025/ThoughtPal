@@ -42,6 +42,10 @@ const handleUpdateNote = async (req, res) => {
   const { _id } = req.payload;
   const { title, content } = req.body;
 
+  console.log(req.params);
+  console.log(req.payload);
+  console.log(req.body);
+  
   if (!title || !content) {
     return res
       .status(400)
