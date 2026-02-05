@@ -3,7 +3,10 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 const Footer = () => {
   return (
-    <footer className="border-top py-3 bg-light mt-auto">
+    <footer
+      className="border-top py-3 mt-auto"
+      style={{ background: "#f8f9fa" }}
+    >
       <div className="container text-center">
         <p className="mb-2 text-muted fst-italic">
           “Your thoughts deserve a safe place.”
@@ -37,7 +40,7 @@ const Footer = () => {
         </div>
 
         <small className="text-muted">
-          © {new Date().getFullYear()} ThoughtPal
+          © {new Date().getFullYear()} ThoughtPal · Built by Prashanth
         </small>
       </div>
     </footer>
