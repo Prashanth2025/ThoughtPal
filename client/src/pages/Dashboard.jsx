@@ -16,7 +16,7 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
-  /* ================= FETCH ================= */
+  /* ================= FETCH NOTES ================= */
   const getNotes = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -25,7 +25,7 @@ const Dashboard = () => {
       });
       setNotes(res.data.notes);
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Failed to load notes");
     } finally {
       setLoading(false);
     }
@@ -38,7 +38,7 @@ const Dashboard = () => {
     getNotes();
   }, [navigate, setUser]);
 
-  /* ================= DELETE (Optimistic) ================= */
+  /* ================= DELETE ================= */
   const handleDeleteNote = async (id) => {
     if (!window.confirm("Delete this note?")) return;
 
@@ -59,6 +59,10 @@ const Dashboard = () => {
 
   /* ================= UPDATE ================= */
   const handleUpdate = async () => {
+    if (!editNote.title || !editNote.content) {
+      return toast.error("Fields cannot be empty");
+    }
+
     const prevNotes = [...notes];
     setNotes(notes.map((n) => (n._id === editNote._id ? editNote : n)));
 
@@ -66,7 +70,10 @@ const Dashboard = () => {
       const token = localStorage.getItem("token");
       await axios.put(
         `${API_URL}/api/v1/note/update/${editNote._id}`,
-        { title: editNote.title, content: editNote.content },
+        {
+          title: editNote.title,
+          content: editNote.content,
+        },
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
@@ -105,7 +112,7 @@ const Dashboard = () => {
                   <div className="d-flex justify-content-end gap-2">
                     <button
                       className="btn btn-sm btn-outline-primary"
-                      onClick={() => setEditNote(n)}
+                      onClick={() => setEditNote({ ...n })}
                     >
                       <i className="bi bi-pencil"></i>
                     </button>
@@ -156,6 +163,12 @@ const Dashboard = () => {
               </div>
 
               <div className="modal-footer">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setEditNote(null)}
+                >
+                  Cancel
+                </button>
                 <button className="btn btn-primary" onClick={handleUpdate}>
                   Save Changes
                 </button>
