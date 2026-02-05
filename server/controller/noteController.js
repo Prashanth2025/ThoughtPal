@@ -63,7 +63,7 @@ const handleUpdateNote = async (req, res) => {
       .status(200)
       .json({ status: true, message: "Note updated successfully", note });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     return res.status(500).json({ status: false, message: "Update failed" });
   }
 };

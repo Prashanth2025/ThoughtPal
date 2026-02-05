@@ -79,7 +79,9 @@ const Dashboard = () => {
 
       toast.success("Note updated");
       setEditNote(null);
-    } catch {
+    } catch(error) {
+      console.log(error);
+      
       setNotes(prev);
       toast.error("Update failed");
     }

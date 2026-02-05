@@ -77,7 +77,9 @@ const Createnotes = () => {
       toast.success("Note updated");
       setEditId(null);
       fetchNotes();
-    } catch {
+    } catch (error) {
+      console.log(error);
+
       toast.error("Update failed");
     }
   };
