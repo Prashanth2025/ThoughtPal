@@ -28,7 +28,7 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
         </Routes>
-        <Footer />
+        {user && <Footer />}
         <Toaster />
       </BrowserRouter>
     </>
