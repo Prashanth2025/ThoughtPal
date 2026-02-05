@@ -17,7 +17,7 @@ const App = () => {
     <>
       <BrowserRouter>
         {user && <Navbar />}
-        <Footer />
+
         <Routes>
           <Route path="/check" element={<Check />} />
           <Route path="/" element={<LandingPage />} />
@@ -28,6 +28,7 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
         </Routes>
+        <Footer />
         <Toaster />
       </BrowserRouter>
     </>
