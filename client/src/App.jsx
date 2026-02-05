@@ -11,36 +11,40 @@ import Profile from "./pages/Profile";
 import ForgetPassword from "./pages/ForgetPassword";
 import LandingPage from "./pages/LandingPage";
 import Footer from "./pages/Footer";
+
 const App = () => {
   const { user } = useUser();
+
   return (
-    <>
-      <BrowserRouter>
+    <BrowserRouter>
+      {/* ✅ FLEX LAYOUT WRAPPER */}
+      <div className="d-flex flex-column min-vh-100">
         {user && <Navbar />}
-        <Routes>
-          <Route path="/check" element={<Check />} />
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/createnotes" element={<Createnotes />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/forgetPassword" element={<ForgetPassword />} />
-        </Routes>
+
+        {/* ✅ Main content grows */}
+        <div className="flex-grow-1">
+          <Routes>
+            <Route path="/check" element={<Check />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/createnotes" element={<Createnotes />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/forgetPassword" element={<ForgetPassword />} />
+          </Routes>
+        </div>
+
         <Toaster />
         {user && <Footer />}
-      </BrowserRouter>
-    </>
+      </div>
+    </BrowserRouter>
   );
 };
 
 const Check = () => {
   const isAuth = localStorage.getItem("token");
-  if (!isAuth) {
-    return <Navigate to="/login" />;
-  } else {
-    return <Navigate to="/dashboard" />;
-  }
+  return isAuth ? <Navigate to="/dashboard" /> : <Navigate to="/login" />;
 };
 
 export default App;
