@@ -12,5 +12,5 @@ const noteRouter = express.Router();
 noteRouter.post("/create", verifyToken, handleCreateNote);
 noteRouter.get("/", verifyToken, getNotes);
 noteRouter.delete("/delete/:_id", verifyToken, handleDeleteNote);
-noteRouter.put("/update/:id", handleUpdateNote);
+noteRouter.put("/update/:id", verifyToken, handleUpdateNote);
 module.exports = noteRouter;
