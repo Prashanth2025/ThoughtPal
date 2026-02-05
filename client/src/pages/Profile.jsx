@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
+
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Profile = () => {
@@ -20,9 +21,7 @@ const Profile = () => {
   useEffect(() => {
     getUserDetails(setUser);
     const token = localStorage.getItem("token");
-    if (!token) {
-      return navigate("/login");
-    }
+    if (!token) navigate("/login");
   }, [navigate, setUser]);
 
   const handleUpdateName = async (e) => {
@@ -60,78 +59,72 @@ const Profile = () => {
         { headers: { Authorization: `Bearer ${token}` } },
       );
       toast.success(res.data.message);
-      setIsUpdate(false);
-      setPassword("");
-      setNewPassword("");
       localStorage.removeItem("token");
-      navigate("/login");
       setUser(null);
+      navigate("/login");
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: "700px" }}>
-      <div
-        className="card shadow-lg p-4"
-        style={{ backgroundColor: "#1c1c1c", color: "#f5f5f5" }}
-      >
-        <h2 className="mb-3 text-uppercase fw-bold m-auto">
-          <i className="bi bi-person-circle me-2"></i> Profile
-        </h2>
-        <h4>
-          <i className="bi bi-person-fill me-2 text-primary"></i>
-          {user?.name}
-        </h4>
-        <h5>
-          <i className="bi bi-envelope-fill me-2 text-info"></i>
-          {user?.email}
-        </h5>
+    <div className="container py-5" style={{ maxWidth: "600px" }}>
+      <div className="card shadow-sm border-0 p-4">
+        <h3 className="text-center fw-bold mb-4">
+          <i className="bi bi-person-circle me-2"></i>Profile
+        </h3>
 
-        <div className="mt-4 d-flex gap-3 w-75 m-auto">
+        <div className="text-center mb-4">
+          <h5 className="fw-semibold mb-1">{user?.name}</h5>
+          <p className="text-muted mb-0">{user?.email}</p>
+        </div>
+
+        <div className="d-flex gap-2 mb-4">
           <button
-            className="btn btn-primary fw-bold flex-fill"
-            onClick={() => setIsUpdate(isUpdate ? false : "name")}
+            className={`btn flex-fill ${
+              isUpdate === "name" ? "btn-dark" : "btn-outline-dark"
+            }`}
+            onClick={() => setIsUpdate(isUpdate === "name" ? false : "name")}
           >
-            <i className="bi bi-pencil-square me-2 w-25"></i> Update Name
+            Update Name
           </button>
           <button
-            className="btn btn-danger fw-bold flex-fill"
-            onClick={() => setIsUpdate(isUpdate ? false : "password")}
+            className={`btn flex-fill ${
+              isUpdate === "password" ? "btn-danger" : "btn-outline-danger"
+            }`}
+            onClick={() =>
+              setIsUpdate(isUpdate === "password" ? false : "password")
+            }
           >
-            <i className="bi bi-shield-lock-fill me-2"></i> Update Password
+            Update Password
           </button>
         </div>
 
-        {/* Update Name Form */}
+        {/* Update Name */}
         {isUpdate === "name" && (
-          <form onSubmit={handleUpdateName} className="mt-4">
+          <form onSubmit={handleUpdateName}>
             <div className="mb-3">
-              <label className="form-label fw-bold">New Name</label>
+              <label className="form-label">New Name</label>
               <input
                 type="text"
-                className="form-control border border-primary"
+                className="form-control"
                 placeholder="Enter new name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-            <button type="submit" className="btn btn-success w-100 fw-bold">
-              <i className="bi bi-check-circle me-2"></i> Confirm Update
-            </button>
+            <button className="btn btn-success w-100">Save Changes</button>
           </form>
         )}
 
-        {/* Update Password Form */}
+        {/* Update Password */}
         {isUpdate === "password" && (
-          <form onSubmit={handleUpdatePass} className="mt-4">
+          <form onSubmit={handleUpdatePass}>
             <div className="mb-3 position-relative">
-              <label className="form-label fw-bold">Current Password</label>
+              <label className="form-label">Current Password</label>
               <input
                 type={showPassword ? "text" : "password"}
-                className="form-control border border-warning"
-                placeholder="Enter current password"
+                className="form-control"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -140,21 +133,18 @@ const Profile = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 style={{
                   position: "absolute",
-                  right: "10px",
-                  top: "55%",
+                  right: 12,
+                  top: "60%",
                   cursor: "pointer",
-                  fontSize: "1.2rem",
-                  color: "black",
                 }}
               ></i>
             </div>
 
             <div className="mb-3 position-relative">
-              <label className="form-label fw-bold">New Password</label>
+              <label className="form-label">New Password</label>
               <input
                 type={showNewPassword ? "text" : "password"}
-                className="form-control border border-danger"
-                placeholder="Enter new password"
+                className="form-control"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
               />
@@ -163,18 +153,14 @@ const Profile = () => {
                 onClick={() => setShowNewPassword(!showNewPassword)}
                 style={{
                   position: "absolute",
-                  right: "10px",
-                  top: "55%",
+                  right: 12,
+                  top: "60%",
                   cursor: "pointer",
-                  fontSize: "1.2rem",
-                  color: "black",
                 }}
               ></i>
             </div>
 
-            <button type="submit" className="btn btn-danger w-100 fw-bold">
-              <i className="bi bi-lock-fill me-2"></i> Confirm Password Update
-            </button>
+            <button className="btn btn-danger w-100">Update Password</button>
           </form>
         )}
       </div>

@@ -42,7 +42,7 @@ const Dashboard = () => {
   const handleDeleteNote = async (id) => {
     if (!window.confirm("Delete this note?")) return;
 
-    const prevNotes = [...notes];
+    const prev = [...notes];
     setNotes(notes.filter((n) => n._id !== id));
 
     try {
@@ -52,7 +52,7 @@ const Dashboard = () => {
       });
       toast.success("Note deleted");
     } catch {
-      setNotes(prevNotes);
+      setNotes(prev);
       toast.error("Delete failed");
     }
   };
@@ -63,7 +63,7 @@ const Dashboard = () => {
       return toast.error("Fields cannot be empty");
     }
 
-    const prevNotes = [...notes];
+    const prev = [...notes];
     setNotes(notes.map((n) => (n._id === editNote._id ? editNote : n)));
 
     try {
@@ -80,39 +80,36 @@ const Dashboard = () => {
       toast.success("Note updated");
       setEditNote(null);
     } catch {
-      setNotes(prevNotes);
+      setNotes(prev);
       toast.error("Update failed");
     }
   };
 
   /* ================= UI ================= */
   return (
-    <div className="container mt-4">
-      <h2 className="mb-4">
-        <i className="bi bi-journal-text me-2"></i> Dashboard
-      </h2>
+    <div className="container py-4">
+      <h3 className="mb-4 fw-bold">
+        <i className="bi bi-journal-text me-2"></i> My Notes
+      </h3>
 
       {loading ? (
-        <p className="text-muted">Loading notes...</p>
+        <p className="text-muted">Loading...</p>
       ) : notes.length === 0 ? (
-        <p className="text-muted">No notes yet. Create one!</p>
+        <p className="text-muted">No notes yet.</p>
       ) : (
-        <div className="row">
+        <div className="row g-3">
           {notes.map((n) => (
-            <div key={n._id} className="col-md-6 col-lg-4 mb-4">
-              <div className="card h-100 shadow-sm border-0 rounded-3">
+            <div key={n._id} className="col-md-6 col-lg-4">
+              <div className="card h-100 shadow-sm border-0">
                 <div className="card-body d-flex flex-column">
-                  <h5 className="fw-bold text-primary">
-                    <i className="bi bi-sticky me-2"></i>
-                    {n.title}
-                  </h5>
-
+                  <h6 className="fw-bold text-primary mb-2">{n.title}</h6>
                   <p className="text-secondary flex-grow-1">{n.content}</p>
 
                   <div className="d-flex justify-content-end gap-2">
                     <button
                       className="btn btn-sm btn-outline-primary"
                       onClick={() => setEditNote({ ...n })}
+                      title="Edit"
                     >
                       <i className="bi bi-pencil"></i>
                     </button>
@@ -120,6 +117,7 @@ const Dashboard = () => {
                     <button
                       className="btn btn-sm btn-outline-danger"
                       onClick={() => handleDeleteNote(n._id)}
+                      title="Delete"
                     >
                       <i className="bi bi-trash"></i>
                     </button>
@@ -134,10 +132,10 @@ const Dashboard = () => {
       {/* ================= EDIT MODAL ================= */}
       {editNote && (
         <div className="modal show d-block bg-dark bg-opacity-50">
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
-                <h5>Edit Note</h5>
+                <h5 className="modal-title">Edit Note</h5>
                 <button
                   className="btn-close"
                   onClick={() => setEditNote(null)}
@@ -146,7 +144,8 @@ const Dashboard = () => {
 
               <div className="modal-body">
                 <input
-                  className="form-control mb-2"
+                  className="form-control mb-3"
+                  placeholder="Title"
                   value={editNote.title}
                   onChange={(e) =>
                     setEditNote({ ...editNote, title: e.target.value })
@@ -155,6 +154,7 @@ const Dashboard = () => {
                 <textarea
                   className="form-control"
                   rows="4"
+                  placeholder="Content"
                   value={editNote.content}
                   onChange={(e) =>
                     setEditNote({ ...editNote, content: e.target.value })
@@ -164,13 +164,13 @@ const Dashboard = () => {
 
               <div className="modal-footer">
                 <button
-                  className="btn btn-secondary"
+                  className="btn btn-outline-secondary"
                   onClick={() => setEditNote(null)}
                 >
                   Cancel
                 </button>
                 <button className="btn btn-primary" onClick={handleUpdate}>
-                  Save Changes
+                  Save
                 </button>
               </div>
             </div>

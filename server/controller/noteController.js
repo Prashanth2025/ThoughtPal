@@ -1,17 +1,18 @@
 const Note = require("../model/noteModel");
 
+/* ================= CREATE ================= */
 const handleCreateNote = async (req, res) => {
   const { _id } = req.payload;
-  const { title, note } = req.body;
+  const { title, content } = req.body; // ✅ FIXED
 
-  if (!title || !note) {
+  if (!title || !content) {
     return res
       .status(400)
       .json({ status: false, message: "Provide both title and content" });
   }
 
   try {
-    await Note.create({ title, content: note, user: _id });
+    await Note.create({ title, content, user: _id });
     return res
       .status(201)
       .json({ status: true, message: "Note created successfully" });
@@ -22,6 +23,7 @@ const handleCreateNote = async (req, res) => {
   }
 };
 
+/* ================= GET ================= */
 const getNotes = async (req, res) => {
   const { _id } = req.payload;
   try {
@@ -34,6 +36,39 @@ const getNotes = async (req, res) => {
   }
 };
 
+/* ================= UPDATE ================= */
+const handleUpdateNote = async (req, res) => {
+  const { id } = req.params;
+  const { _id } = req.payload;
+  const { title, content } = req.body;
+
+  if (!title || !content) {
+    return res
+      .status(400)
+      .json({ status: false, message: "Title and content required" });
+  }
+
+  try {
+    const note = await Note.findOneAndUpdate(
+      { _id: id, user: _id }, // 🔐 ownership check
+      { title, content },
+      { new: true, runValidators: true },
+    );
+
+    if (!note) {
+      return res.status(404).json({ status: false, message: "Note not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ status: true, message: "Note updated successfully", note });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: false, message: "Update failed" });
+  }
+};
+
+/* ================= DELETE ================= */
 const handleDeleteNote = async (req, res) => {
   const { _id } = req.params;
   try {
@@ -48,4 +83,9 @@ const handleDeleteNote = async (req, res) => {
   }
 };
 
-module.exports = { handleCreateNote, getNotes, handleDeleteNote };
+module.exports = {
+  handleCreateNote,
+  getNotes,
+  handleDeleteNote,
+  handleUpdateNote, // ✅ EXPORT
+};

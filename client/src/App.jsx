@@ -10,12 +10,14 @@ import Createnotes from "./pages/Createnotes";
 import Profile from "./pages/Profile";
 import ForgetPassword from "./pages/ForgetPassword";
 import LandingPage from "./pages/LandingPage";
+import Footer from "./pages/Footer";
 const App = () => {
   const { user } = useUser();
   return (
     <>
       <BrowserRouter>
-        {user && <Navbar></Navbar>}
+        {user && <Navbar />}
+        <Footer />
         <Routes>
           <Route path="/check" element={<Check />} />
           <Route path="/" element={<LandingPage />} />
