@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import bgImage from "../assets/sunset.jpg";
+import bgImage from "../assets/login.jpg";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
