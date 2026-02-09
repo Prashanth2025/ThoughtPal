@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Live from "../assets/lp.mp4";
+import Live from "../assets/lp.webm";
 
 const LandingPage = () => {
   return (
