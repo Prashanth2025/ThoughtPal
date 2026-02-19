@@ -178,3 +178,37 @@ footer a:hover {
   opacity: 1;
   transform: translateY(-2px);
 }
+
+/* createnotes */
+.create-notes-page {
+  max-width: 1100px;
+}
+
+.header-box {
+  padding: 18px 22px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.create-card {
+  backdrop-filter: blur(6px);
+}
+
+.note-card {
+  transition: all 0.25s ease;
+}
+
+.note-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.15);
+}
+
+.note-card {
+  transition: all 0.25s ease;
+}
+.note-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08) !important;
+}

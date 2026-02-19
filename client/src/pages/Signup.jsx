@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import "bootstrap-icons/font/bootstrap-icons.css"; // ✅ IMPORTANT
 import bgImage from "../assets/signup.jpg";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
@@ -25,9 +26,12 @@ const Signup = () => {
     e.preventDefault();
     const { name, email, password } = signupDetails;
 
-    if (!name) return toast.error("Name field is mandatory");
-    if (!email) return toast.error("Email field is mandatory");
-    if (!password) return toast.error("Password field is mandatory");
+    if (!name.trim()) return toast.error("Name field is mandatory");
+    if (!email.trim()) return toast.error("Email field is mandatory");
+    if (!password.trim()) return toast.error("Password field is mandatory");
+
+    // ✅ simple email check
+    if (!email.includes("@")) return toast.error("Enter valid email");
 
     try {
       setLoading(true);
@@ -52,25 +56,28 @@ const Signup = () => {
         backgroundImage: `url(${bgImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        height: "100vh",
+        minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        padding: "20px",
       }}
     >
       <div
         style={{
-          background: "rgba(0,0,0,0.6)",
+          background: "rgba(0,0,0,0.65)",
           padding: "30px",
           borderRadius: "12px",
           maxWidth: "400px",
           width: "100%",
           color: "white",
+          backdropFilter: "blur(6px)",
         }}
       >
         <h2 className="text-center mb-4">📝 Signup</h2>
 
         <form onSubmit={handleSubmit}>
+          {/* Name */}
           <div className="mb-3">
             <input
               type="text"
@@ -83,6 +90,7 @@ const Signup = () => {
             />
           </div>
 
+          {/* Email */}
           <div className="mb-3">
             <input
               type="email"
@@ -95,6 +103,7 @@ const Signup = () => {
             />
           </div>
 
+          {/* Password */}
           <div className="mb-3 position-relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -102,30 +111,32 @@ const Signup = () => {
               value={signupDetails.password}
               placeholder="Password"
               onChange={handleChange}
-              className="form-control"
+              className="form-control pe-5"
               disabled={loading}
             />
+
             <i
               className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
               onClick={() => !loading && setShowPassword(!showPassword)}
               style={{
                 position: "absolute",
-                right: "10px",
+                right: "12px",
                 top: "50%",
                 transform: "translateY(-50%)",
-                cursor: "pointer",
+                cursor: loading ? "not-allowed" : "pointer",
                 fontSize: "1.2rem",
-                color: "lightgray",
+                color: "#ccc",
               }}
             ></i>
           </div>
 
+          {/* Button */}
           <button
             type="submit"
-            className="btn btn-success w-100 d-flex align-items-center justify-content-center"
+            className="btn btn-success w-100"
             disabled={loading}
           >
-            {loading ? <span className="rotate-loader"></span> : "Signup"}
+            {loading ? "Please wait..." : "Signup"}
           </button>
         </form>
 

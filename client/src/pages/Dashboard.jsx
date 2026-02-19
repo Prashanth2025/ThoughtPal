@@ -1,15 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useUser } from "../contex/UserContex";
-import { getUserDetails } from "../utils/getUserDetailds";
 import { useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Dashboard = () => {
-  const { setUser } = useUser();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editNote, setEditNote] = useState(null);
@@ -32,11 +29,10 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    getUserDetails(setUser);
     const token = localStorage.getItem("token");
     if (!token) return navigate("/login");
     getNotes();
-  }, [navigate, setUser]);
+  }, [navigate]);
 
   /* ================= DELETE ================= */
   const handleDeleteNote = async (id) => {
@@ -79,9 +75,8 @@ const Dashboard = () => {
 
       toast.success("Note updated");
       setEditNote(null);
-    } catch(error) {
+    } catch (error) {
       console.log(error);
-      
       setNotes(prev);
       toast.error("Update failed");
     }
@@ -90,39 +85,73 @@ const Dashboard = () => {
   /* ================= UI ================= */
   return (
     <div className="container py-4">
-      <h3 className="mb-4 fw-bold">
-        <i className="bi bi-journal-text me-2"></i> My Notes
-      </h3>
+      {/* 🔥 Premium Header */}
+      <div className="bg-white rounded-4 shadow-sm p-4 mb-4 border">
+        <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <div>
+            <h3 className="fw-bold mb-1">
+              <i className="bi bi-journal-text text-primary me-2"></i>
+              My Notes
+            </h3>
+            <p className="text-muted mb-0 small">
+              Capture your thoughts and keep them safe ✨
+            </p>
+          </div>
 
+          <div className="text-end">
+            <h4 className="fw-bold text-primary mb-0">{notes.length}</h4>
+            <small className="text-muted">Total Notes</small>
+          </div>
+        </div>
+      </div>
+
+      {/* 🔄 Loading */}
       {loading ? (
-        <p className="text-muted">Loading...</p>
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary mb-3"></div>
+          <p className="text-muted mb-0">Loading your notes...</p>
+        </div>
       ) : notes.length === 0 ? (
-        <p className="text-muted">No notes yet.</p>
+        /* 📭 Empty State */
+        <div className="text-center py-5">
+          <i className="bi bi-journal-x fs-1 text-muted"></i>
+          <h5 className="mt-3">No notes yet</h5>
+          <p className="text-muted">Start by creating your first note ✨</p>
+        </div>
       ) : (
-        <div className="row g-3">
+        /* 🧾 Notes Grid */
+        <div className="row g-4">
           {notes.map((n) => (
             <div key={n._id} className="col-md-6 col-lg-4">
-              <div className="card h-100 shadow-sm border-0">
+              <div className="card h-100 border-0 shadow-sm rounded-4">
                 <div className="card-body d-flex flex-column">
-                  <h6 className="fw-bold text-primary mb-2">{n.title}</h6>
-                  <p className="text-secondary flex-grow-1">{n.content}</p>
+                  <h6 className="fw-semibold text-primary mb-2 text-truncate">
+                    {n.title}
+                  </h6>
 
-                  <div className="d-flex justify-content-end gap-2">
-                    <button
-                      className="btn btn-sm btn-outline-primary"
-                      onClick={() => setEditNote({ ...n })}
-                      title="Edit"
-                    >
-                      <i className="bi bi-pencil"></i>
-                    </button>
+                  <p className="text-muted small flex-grow-1">{n.content}</p>
 
-                    <button
-                      className="btn btn-sm btn-outline-danger"
-                      onClick={() => handleDeleteNote(n._id)}
-                      title="Delete"
-                    >
-                      <i className="bi bi-trash"></i>
-                    </button>
+                  <div className="d-flex justify-content-between align-items-center mt-3">
+                    <small className="text-muted">
+                      <i className="bi bi-stickies me-1"></i>
+                      Note
+                    </small>
+
+                    <div className="d-flex gap-2">
+                      <button
+                        className="btn btn-light btn-sm rounded-circle border"
+                        onClick={() => setEditNote({ ...n })}
+                      >
+                        <i className="bi bi-pencil text-primary"></i>
+                      </button>
+
+                      <button
+                        className="btn btn-light btn-sm rounded-circle border"
+                        onClick={() => handleDeleteNote(n._id)}
+                      >
+                        <i className="bi bi-trash text-danger"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -131,11 +160,11 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* ================= EDIT MODAL ================= */}
+      {/* ✏️ Edit Modal */}
       {editNote && (
         <div className="modal show d-block bg-dark bg-opacity-50">
           <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
+            <div className="modal-content rounded-4 border-0 shadow">
               <div className="modal-header">
                 <h5 className="modal-title">Edit Note</h5>
                 <button
@@ -172,7 +201,7 @@ const Dashboard = () => {
                   Cancel
                 </button>
                 <button className="btn btn-primary" onClick={handleUpdate}>
-                  Save
+                  Save Changes
                 </button>
               </div>
             </div>
