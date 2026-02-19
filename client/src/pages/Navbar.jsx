@@ -5,9 +5,12 @@ import toast from "react-hot-toast";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 const Navbar = () => {
-  const { setUser } = useUser();
+  const { user, setUser } = useUser(); // ✅ get user also
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+
+  // ✅ IMPORTANT: hide navbar if not logged in
+  if (!user) return null;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -21,7 +24,7 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
       <div className="container">
-        {/* ✅ Brand */}
+        {/* Brand */}
         <Link
           className="navbar-brand fw-bold d-flex align-items-center gap-2"
           to="/dashboard"
@@ -31,7 +34,7 @@ const Navbar = () => {
           ThoughtPal
         </Link>
 
-        {/* ✅ Hamburger */}
+        {/* Hamburger */}
         <button
           className="navbar-toggler"
           type="button"
@@ -43,7 +46,7 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* ✅ Collapsible menu */}
+        {/* Menu */}
         <div
           id="navbarContent"
           className={`collapse navbar-collapse ${isOpen ? "show" : ""}`}
@@ -74,7 +77,6 @@ const Navbar = () => {
               </Link>
             </li>
 
-            {/* ✅ Logout */}
             <li className="nav-item mt-2 mt-lg-0 ms-lg-3">
               <button
                 className="btn btn-outline-light btn-sm w-100 w-lg-auto"

@@ -3,7 +3,6 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import bgImage from "../assets/login.jpg";
-import "bootstrap-icons/font/bootstrap-icons.css";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -48,28 +47,23 @@ const Login = () => {
         backgroundImage: `url(${bgImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        minHeight: "100vh",
+        height: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "20px",
       }}
     >
-      {/* Premium Glass Card */}
       <div
-        className="shadow-lg"
         style={{
-          backdropFilter: "blur(14px)",
-          background: "rgba(0,0,0,0.55)",
-          borderRadius: "18px",
-          maxWidth: "420px",
+          background: "rgba(0,0,0,0.6)",
+          padding: "30px",
+          borderRadius: "12px",
+          maxWidth: "400px",
           width: "100%",
-          padding: "32px",
           color: "white",
-          border: "1px solid rgba(255,255,255,0.15)",
         }}
       >
-        <h2 className="text-center mb-4 fw-bold">🔐 Welcome Back</h2>
+        <h2 className="text-center mb-4">🔐 Login</h2>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -77,7 +71,7 @@ const Login = () => {
               type="email"
               name="email"
               className="form-control"
-              placeholder="Email address"
+              placeholder="Email"
               value={loginDetails.email}
               onChange={handleChange}
               disabled={loading}
@@ -99,36 +93,35 @@ const Login = () => {
               onClick={() => setShowPassword(!showPassword)}
               style={{
                 position: "absolute",
-                right: "12px",
+                right: "10px",
                 top: "50%",
                 transform: "translateY(-50%)",
                 cursor: "pointer",
                 fontSize: "1.2rem",
-                color: "#ddd",
+                color: "lightgray",
               }}
             ></i>
           </div>
 
           <button
             type="submit"
-            className="btn btn-primary w-100 d-flex align-items-center justify-content-center fw-semibold"
+            className="btn btn-primary w-100 d-flex align-items-center justify-content-center"
             disabled={loading}
-            style={{ borderRadius: "10px" }}
           >
             {loading ? <span className="rotate-loader"></span> : "Login"}
           </button>
         </form>
 
-        <div className="text-center mt-4">
-          <small className="text-light">
-            Don&apos;t have an account?{" "}
-            <Link to="/signup" className="text-info fw-semibold">
+        <div className="text-center mt-3">
+          <small>
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-info">
               Signup
             </Link>
           </small>
           <br />
           <small>
-            <Link to="/forgetPassword" className="text-warning fw-semibold">
+            <Link to="/forgetPassword" className="text-warning">
               Forgot Password?
             </Link>
           </small>
