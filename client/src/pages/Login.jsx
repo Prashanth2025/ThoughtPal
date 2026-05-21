@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import bgImage from "../assets/login.jpg";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -44,9 +43,7 @@ const Login = () => {
   return (
     <div
       style={{
-        backgroundImage: `url(${bgImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        background: "linear-gradient(135deg, #f5f7fa, #c3cfe2)", // soft professional gradient
         height: "100vh",
         display: "flex",
         justifyContent: "center",
